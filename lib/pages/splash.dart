@@ -1,9 +1,10 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:poolclean/pages/ajustes_iniciales.dart';
-import 'package:poolclean/pages/login.dart';
 import 'package:poolclean/utils/global.colors.dart';
 
 class Splash extends StatelessWidget {
@@ -28,7 +29,7 @@ class Splash extends StatelessWidget {
             Text(
               'POOL CLEAN',
               style: GoogleFonts.poppins(
-                textStyle: TextStyle(
+                textStyle: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
                   fontWeight: FontWeight.w800,

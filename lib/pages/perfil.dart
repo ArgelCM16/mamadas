@@ -1,6 +1,7 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:poolclean/pages/Informacion_personal.dart';
 import 'package:poolclean/pages/preguntas_frecuentes.dart';
@@ -29,7 +30,7 @@ class _PerfilPageState extends State<PerfilPage> {
             const CardProfileImageSettings(),
             const SizedBox(height: 10),
   ListTile(
-              shape: Border(
+              shape:  const Border(
                 bottom: BorderSide(color: Colors.grey, width: 0.2),
                 top: BorderSide(color: Colors.grey, width: 0.2),
               ),
@@ -63,7 +64,7 @@ class _PerfilPageState extends State<PerfilPage> {
                 style: GoogleFonts.poppins(
                     fontSize: 14, fontWeight: FontWeight.w500),
               ),
-              trailing: Icon(Icons.arrow_forward_ios_rounded),
+              trailing: const Icon(Icons.arrow_forward_ios_rounded),
               onTap: () {},
             ),
             ListTile(
@@ -166,6 +167,10 @@ class _CardProfileImageSettingsState extends State<CardProfileImageSettings> {
                     Container(
                       width: fem * 80,
                       height: fem * 80,
+                      decoration: BoxDecoration(
+                        color: GlobalColors.mainColor,
+                        shape: BoxShape.circle,
+                      ),
                       child: _selectedImage != null
                           ? ClipOval(
                               child: Image.file(
@@ -179,10 +184,6 @@ class _CardProfileImageSettingsState extends State<CardProfileImageSettings> {
                               Icons.photo_camera,
                               color: Colors.white,
                             ),
-                      decoration: BoxDecoration(
-                        color: GlobalColors.mainColor,
-                        shape: BoxShape.circle,
-                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10),
