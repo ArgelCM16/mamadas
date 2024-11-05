@@ -1,0 +1,39 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    // El plugin de Flutter debe aplicarse después de los plugins de Android y Kotlin.
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace = "com.example.poolclean"
+    compileSdk = 34  // Cambia a la versión de SDK que necesites (por ejemplo, 33 o 34)
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17  // Usa Java 17
+        targetCompatibility = JavaVersion.VERSION_17  // Usa Java 17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"  // Usa Java 17 en Kotlin también
+    }
+
+    defaultConfig {
+        applicationId = "com.example.poolclean"
+        minSdkVersion = 21  // Configura el SDK mínimo aquí (usa al menos 21)
+        targetSdkVersion = 33  // Usa la versión que coincida con tu compileSdk
+        versionCode = 1
+        versionName = "1.0"
+    }
+
+    buildTypes {
+        release {
+            // Configuración para firmar la app en modo release.
+            signingConfig = signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}
