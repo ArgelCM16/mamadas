@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:poolclean/pages/ajustes_formula_litraje.dart';
 import 'package:poolclean/utils/global.colors.dart';
-import 'package:poolclean/widgets/litros_modal.dart'; 
+import 'package:poolclean/widgets/litros_modal.dart';
 import 'package:poolclean/widgets/wave_animation.dart';
 
 class AjustesInicialesPage extends StatefulWidget {
@@ -67,7 +67,7 @@ class _AjustesInicialesPageState extends State<AjustesInicialesPage>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '¿Conoces el litraje de tu piscina?',
+                    '¿Sabes cuántos litros de agua tiene tu piscina?',
                     style: GoogleFonts.poppins(
                       textStyle: TextStyle(
                         color: GlobalColors.mainColor,
@@ -84,13 +84,13 @@ class _AjustesInicialesPageState extends State<AjustesInicialesPage>
                       onPressed: _showLitrosModal,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: GlobalColors.mainColor,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.all(20),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       child: const Text(
-                        'Sí, Conozco el litraje',
+                        'Sí, conozco la cantidad de litros de mi piscina.',
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
@@ -109,13 +109,13 @@ class _AjustesInicialesPageState extends State<AjustesInicialesPage>
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: GlobalColors.colorborde,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.all(20),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       child: Text(
-                        '¿No conoces el litraje? Haz clic aquí',
+                        '¿No sabes cuántos litros tiene tu piscina? Haz clic aquí.',
                         style: TextStyle(
                             fontSize: 16, color: GlobalColors.textColor),
                       ),
