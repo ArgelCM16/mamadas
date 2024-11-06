@@ -1,13 +1,17 @@
-import 'dart:ui';
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:poolclean/utils/global.colors.dart';
-import 'package:http/http.dart' as http; // Importa la librería http
+import 'package:http/http.dart' as http;
+import 'package:poolclean/widgets/ph_card_widget.dart';
+import 'package:poolclean/widgets/temperature_card_widget.dart';
 
 class HomePageContent extends StatelessWidget {
+  const HomePageContent({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +19,7 @@ class HomePageContent extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -40,7 +44,7 @@ class HomePageContent extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             AspectRatio(
               aspectRatio: 1.8,
               child: Stack(
@@ -77,7 +81,7 @@ class HomePageContent extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -87,19 +91,33 @@ class HomePageContent extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                            height: 15, width: 15, color: Color(0xffFF0159)),
+                            height: 15,
+                            width: 15,
+                            color: const Color(0xffFF0159)),
                         Container(
-                            height: 15, width: 15, color: Color(0xffFD5C01)),
+                            height: 15,
+                            width: 15,
+                            color: const Color(0xffFD5C01)),
                         Container(
-                            height: 15, width: 15, color: Color(0xffFCC403)),
+                            height: 15,
+                            width: 15,
+                            color: const Color(0xffFCC403)),
                         Container(
-                            height: 15, width: 15, color: Color(0xffF8EE00)),
+                            height: 15,
+                            width: 15,
+                            color: const Color(0xffF8EE00)),
                         Container(
-                            height: 15, width: 15, color: Color(0xffADD302)),
+                            height: 15,
+                            width: 15,
+                            color: const Color(0xffADD302)),
                         Container(
-                            height: 15, width: 15, color: Color(0xff6CC718)),
+                            height: 15,
+                            width: 15,
+                            color: const Color(0xff6CC718)),
                         Container(
-                            height: 15, width: 15, color: Color(0xff0EC140)),
+                            height: 15,
+                            width: 15,
+                            color: const Color(0xff0EC140)),
                       ],
                     ),
                     Text(
@@ -111,14 +129,16 @@ class HomePageContent extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                            height: 15, width: 70, color: Color(0xff009E2D)),
+                            height: 15,
+                            width: 70,
+                            color: const Color(0xff009E2D)),
                       ],
                     ),
                     Text(
@@ -130,26 +150,40 @@ class HomePageContent extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                            height: 15, width: 15, color: Color(0xff04B666)),
+                            height: 15,
+                            width: 15,
+                            color: const Color(0xff04B666)),
                         Container(
-                            height: 15, width: 15, color: Color(0xff00C0B8)),
+                            height: 15,
+                            width: 15,
+                            color: const Color(0xff00C0B8)),
                         Container(
-                            height: 15, width: 15, color: Color(0xff1D92D5)),
+                            height: 15,
+                            width: 15,
+                            color: const Color(0xff1D92D5)),
                         Container(
-                            height: 15, width: 15, color: Color(0xff2D56AD)),
+                            height: 15,
+                            width: 15,
+                            color: const Color(0xff2D56AD)),
                         Container(
-                            height: 15, width: 15, color: Color(0xff5E52A8)),
+                            height: 15,
+                            width: 15,
+                            color: const Color(0xff5E52A8)),
                         Container(
-                            height: 15, width: 15, color: Color(0xff6744A2)),
+                            height: 15,
+                            width: 15,
+                            color: const Color(0xff6744A2)),
                         Container(
-                            height: 15, width: 15, color: Color(0xff4A2D7F)),
+                            height: 15,
+                            width: 15,
+                            color: const Color(0xff4A2D7F)),
                       ],
                     ),
                     Text(
@@ -163,10 +197,10 @@ class HomePageContent extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
               alignment: Alignment.topLeft,
-              margin: EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
                 'Informes sobre el estado de tu piscina ',
                 style: GoogleFonts.poppins(
@@ -176,18 +210,17 @@ class HomePageContent extends StatelessWidget {
                 textAlign: TextAlign.start,
               ),
             ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
+            const SizedBox(height: 10),
+            const Padding(
+              padding: EdgeInsets.all(10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(5.0),
+                      padding: EdgeInsets.all(5.0),
                       child: Column(
                         children: [
-                          // Card de temperatura
                           TemperatureCard(),
                           SizedBox(height: 10),
                           PhCard(),
@@ -197,10 +230,9 @@ class HomePageContent extends StatelessWidget {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(5.0),
+                      padding: EdgeInsets.all(5.0),
                       child: Column(
                         children: [
-                          // Card de temperatura
                           PhCard(),
                           SizedBox(height: 10),
                           PhCard(),
@@ -211,7 +243,7 @@ class HomePageContent extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
           ],
         ),
       ),
@@ -220,27 +252,27 @@ class HomePageContent extends StatelessWidget {
 
   List<PieChartSectionData> getSections() {
     final colors = [
-      Color(0xffFF0109),
-      Color(0xffFD5C01),
-      Color(0xffFCC403),
-      Color(0xffF8EE00),
-      Color(0xffADD302),
-      Color(0xff6CC718),
-      Color(0xff0EC140),
-      Color(0xff009E2D),
-      Color(0xff04B666),
-      Color(0xff00C0B8),
-      Color(0xff1D92D5),
-      Color(0xff2D56AD),
-      Color(0xff5E52A8),
-      Color(0xff6744A2),
-      Color(0xff4A2D7F),
+      const Color(0xffFF0109),
+      const Color(0xffFD5C01),
+      const Color(0xffFCC403),
+      const Color(0xffF8EE00),
+      const Color(0xffADD302),
+      const Color(0xff6CC718),
+      const Color(0xff0EC140),
+      const Color(0xff009E2D),
+      const Color(0xff04B666),
+      const Color(0xff00C0B8),
+      const Color(0xff1D92D5),
+      const Color(0xff2D56AD),
+      const Color(0xff5E52A8),
+      const Color(0xff6744A2),
+      const Color(0xff4A2D7F),
     ];
 
     final labels = List.generate(15, (i) => i.toString());
 
     return List.generate(15, (i) {
-      final isTouched = i == 0; // Cambia esto según el índice tocado
+      final isTouched = i == 0;
       final opacity = isTouched ? 1.0 : 0.6;
       return PieChartSectionData(
         color: colors[i],
@@ -272,8 +304,7 @@ class BatteryCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: 20, vertical: 20), // Ajusta el padding
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           children: [
             Text(
@@ -281,196 +312,38 @@ class BatteryCard extends StatelessWidget {
               style: GoogleFonts.poppins(
                   fontSize: 16, fontWeight: FontWeight.w700),
             ),
-            SizedBox(height: 20), // Espacio entre el título y el indicador
+            const SizedBox(height: 20),
             Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 20), // Ajusta el padding
               child: CircularPercentIndicator(
                 radius: 40,
                 lineWidth: 5,
-                percent: 0.7, // Cambia el porcentaje según lo que necesites
+                percent: 0.7,
                 progressColor: Colors.green,
                 backgroundColor: Colors.grey.shade100,
                 circularStrokeCap: CircularStrokeCap.round,
                 center: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.battery_5_bar,
                       weight: 5,
                       color: Colors.grey,
                     ),
-                    SizedBox(width: 5), // Espacio entre el ícono y el texto
+                    const SizedBox(width: 5),
                     Expanded(
-                      // Usa Expanded para ajustar el texto
                       child: Text(
-                        '70%', // Cambia esto por el valor que necesites
+                        '70%',
                         style: GoogleFonts.poppins(fontSize: 16),
-                        overflow: TextOverflow
-                            .ellipsis, // Agrega "..." si el texto es muy largo
-                        maxLines: 1, // Limita a una línea
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class TemperatureCard extends StatefulWidget {
-  @override
-  _TemperatureCardState createState() => _TemperatureCardState();
-}
-
-class PhCard extends StatefulWidget {
-  @override
-  _PhCardState createState() => _PhCardState();
-}
-
-class _TemperatureCardState extends State<TemperatureCard> {
-  double? temperature; // Variable para almacenar la temperatura
-
-  @override
-  void initState() {
-    super.initState();
-    fetchTemperature(); // Llama a la función al iniciar el estado
-  }
-
-  Future<void> fetchTemperature() async {
-    try {
-      final response = await http.get(Uri.parse('http://192.168.4.1/temp'));
-      if (response.statusCode == 200) {
-        setState(() {
-          temperature = double.parse(response.body);
-        });
-      } else {
-        throw Exception('Error al obtener la temperatura');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      elevation: 8.0,
-      shadowColor: Colors.grey.withOpacity(0.5),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: 20, vertical: 20), // Ajusta el padding
-        child: Column(
-          children: [
-            Text('Temperatura',
-                style: GoogleFonts.poppins(
-                    fontSize: 16, fontWeight: FontWeight.w700)),
-            SizedBox(height: 10),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.thermostat_rounded,
-                  color: GlobalColors.mainColor,
-                ),
-                SizedBox(width: 8), // Espacio entre el ícono y el texto
-                Expanded(
-                  // Usa Expanded para ajustar el texto
-                  child: Text(
-                    temperature != null
-                        ? '${temperature!.toStringAsFixed(1)} °C'
-                        : 'Cargando...',
-                    style: GoogleFonts.poppins(
-                        color: Colors.grey[700],
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                    overflow: TextOverflow
-                        .ellipsis, // Agrega "..." si el texto es muy largo
-                    maxLines: 1, // Limita a una línea
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _PhCardState extends State<PhCard> {
-  double? ph; // Variable para almacenar el pH
-
-  @override
-  void initState() {
-    super.initState();
-    fetchPh(); // Llama a la función al iniciar el estado
-  }
-
-  Future<void> fetchPh() async {
-    try {
-      final response = await http.get(Uri.parse('http://192.168.4.1/ph'));
-      if (response.statusCode == 200) {
-        setState(() {
-          ph = double.parse(response.body);
-        });
-      } else {
-        throw Exception('Error al obtener el pH');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      elevation: 8.0,
-      shadowColor: Colors.grey.withOpacity(0.5),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-            horizontal: 20, vertical: 20), // Ajusta el padding
-        child: Column(
-          children: [
-            Text('pH',
-                style: GoogleFonts.poppins(
-                    fontSize: 16, fontWeight: FontWeight.w700)),
-            SizedBox(height: 10),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.water_drop_rounded,
-                  color: GlobalColors.mainColor,
-                ),
-                SizedBox(width: 8), // Espacio entre el ícono y el texto
-                Expanded(
-                  // Usa Expanded para ajustar el texto
-                  child: Text(
-                    ph != null ? '${ph!.toStringAsFixed(1)}' : 'Cargando...',
-                    style: GoogleFonts.poppins(
-                        color: Colors.grey[700],
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                    overflow: TextOverflow
-                        .ellipsis, // Agrega "..." si el texto es muy largo
-                    maxLines: 1, // Limita a una línea
-                  ),
-                )
-              ],
-            )
           ],
         ),
       ),

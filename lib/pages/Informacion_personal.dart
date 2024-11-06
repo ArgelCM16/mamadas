@@ -1,23 +1,28 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
-import 'package:poolclean/utils/global.colors.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:poolclean/utils/global.colors.dart';
+import 'package:poolclean/widgets/informacion_personal_widget.dart';
 
 class InformacionPersonal extends StatefulWidget {
   const InformacionPersonal({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _InformacionPersonalState createState() => _InformacionPersonalState();
 }
 
 class _InformacionPersonalState extends State<InformacionPersonal> {
   final _formKey = GlobalKey<FormState>();
+  bool _isEditing = false;
   String _fullName = 'Mishell Jiménez';
   String _email = 'jimene@gmail.com';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: GlobalColors.backgroundColor,
       appBar: AppBar(
         backgroundColor: GlobalColors.mainColor,
         elevation: 0,
@@ -26,155 +31,146 @@ class _InformacionPersonalState extends State<InformacionPersonal> {
         ),
         centerTitle: true,
         title: Text(
-          'Información personal',
+          'Información Personal',
           style: GoogleFonts.poppins(
             color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
           ),
         ),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(10),
-        children: [
-          const CardPhotoPerfil(),
-          const SizedBox(
-            height: 20,
-          ),
-          Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                ListTile(
-                  title: Row(
-                    children: [
-                      Text(
-                        'Nombre completo:',
-                        style: GoogleFonts.poppins(
-                            fontSize: 14, fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(width: 5),
-                      Expanded(
-                        child: TextFormField(
-                          initialValue: _fullName,
-                          decoration: const InputDecoration(
-                            fillColor: Colors.grey,
-                            border: InputBorder.none,
-                            hintText: 'Ingrese su nombre completo',
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingrese su nombre completo';
-                            }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            _fullName = value;
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                ListTile(
-                  title: Row(
-                    children: [
-                      Text(
-                        'Correo:',
-                        style: GoogleFonts.poppins(
-                            fontSize: 14, fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(width: 5),
-                      Expanded(
-                        child: TextFormField(
-                          initialValue: _email,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Ingrese su correo electrónico',
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingrese su correo electrónico';
-                            }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            _email = value;
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // TODO: Implement the update logic here
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Datos actualizados')),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: GlobalColors.mainColor,
-                      padding: const EdgeInsets.all(10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    child: const Text(
-                      'Actualizar datos',
-                      style: TextStyle(fontSize: 14, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ],
+        actions: [
+          IconButton(
+            icon: Icon(
+              _isEditing ? Icons.check : Icons.edit,
+              color: Colors.white,
             ),
+            onPressed: () {
+              if (_isEditing && _formKey.currentState!.validate()) {
+                setState(() {
+                  _isEditing = false;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text(
+                      'Datos guardados',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    backgroundColor: GlobalColors.mainColor,
+                  ),
+                );
+              } else if (!_isEditing) {
+                setState(() {
+                  _isEditing = true;
+                });
+              }
+            },
           ),
         ],
       ),
-    );
-  }
-}
-
-class CardPhotoPerfil extends StatelessWidget {
-  const CardPhotoPerfil({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    double baseWidth = 400;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        width: 1000,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: GlobalColors.colorborde),
-        margin: EdgeInsets.all(20),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Column(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const CardPhotoPerfil(),
+            const SizedBox(height: 20),
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: fem * 80,
-                    height: fem * 80,
-                    child: Icon(
-                      Icons.person_2_rounded,
-                      color: Colors.white,
-                    ),
-                    decoration: BoxDecoration(
-                        color: GlobalColors.mainColor, shape: BoxShape.circle),
+                  // Nombre Completo
+                  _buildInputField(
+                    label: 'Nombre Completo',
+                    hint: 'Ingrese su nombre completo',
+                    initialValue: _fullName,
+                    onChanged: (value) {
+                      setState(() {
+                        _fullName = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor ingrese su nombre completo';
+                      }
+                      return null;
+                    },
+                    enabled: _isEditing,
+                  ),
+                  const SizedBox(height: 20),
+                  _buildInputField(
+                    label: 'Correo Electrónico',
+                    hint: 'Ingrese su correo electrónico',
+                    initialValue: _email,
+                    onChanged: (value) {
+                      setState(() {
+                        _email = value;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor ingrese su correo electrónico';
+                      }
+                      String pattern =
+                          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$';
+                      RegExp regex = RegExp(pattern);
+                      if (!regex.hasMatch(value)) {
+                        return 'Por favor ingrese un correo electrónico válido';
+                      }
+                      return null;
+                    },
+                    enabled: _isEditing,
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _buildInputField({
+    required String label,
+    required String hint,
+    required String initialValue,
+    required Function(String) onChanged,
+    required String? Function(String?) validator,
+    required bool enabled,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          enabled: enabled,
+          initialValue: initialValue,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            hintText: hint,
+            hintStyle: GoogleFonts.poppins(color: Colors.grey.shade600),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            prefixIcon:
+                Icon(Icons.person_outline, color: GlobalColors.mainColor),
+          ),
+          validator: validator,
+          onChanged: onChanged,
+        ),
+      ],
     );
   }
 }

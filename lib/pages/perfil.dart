@@ -3,11 +3,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:poolclean/pages/Informacion_personal.dart';
+//import 'package:poolclean/pages/configurar_piscinas_page.dart';
+import 'package:poolclean/pages/informacion_personal.dart';
 import 'package:poolclean/pages/preguntas_frecuentes.dart';
 import 'package:poolclean/pages/terminos_condiciones.dart';
 import 'package:poolclean/utils/global.colors.dart';
-import 'package:image_picker/image_picker.dart';  
+import 'package:image_picker/image_picker.dart';
 
 class PerfilPage extends StatefulWidget {
   const PerfilPage({super.key});
@@ -29,8 +30,8 @@ class _PerfilPageState extends State<PerfilPage> {
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             const CardProfileImageSettings(),
             const SizedBox(height: 10),
-  ListTile(
-              shape:  const Border(
+            ListTile(
+              shape: const Border(
                 bottom: BorderSide(color: Colors.grey, width: 0.2),
                 top: BorderSide(color: Colors.grey, width: 0.2),
               ),
@@ -52,7 +53,7 @@ class _PerfilPageState extends State<PerfilPage> {
               },
             ),
             ListTile(
-              shape:const Border(
+              shape: const Border(
                 bottom: BorderSide(color: Colors.grey, width: 0.2),
               ),
               leading: Icon(
@@ -65,10 +66,18 @@ class _PerfilPageState extends State<PerfilPage> {
                     fontSize: 14, fontWeight: FontWeight.w500),
               ),
               trailing: const Icon(Icons.arrow_forward_ios_rounded),
-              onTap: () {},
+              onTap: () {
+                //REVISAR ARCHIVO configurar_piscinas_page, esta deshabilitada de manera temporal
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const ConfigurarPiscinaPage(),
+                //   ),
+                // );
+              },
             ),
             ListTile(
-              shape:const Border(
+              shape: const Border(
                 bottom: BorderSide(color: Colors.grey, width: 0.2),
               ),
               leading: Icon(
@@ -80,12 +89,12 @@ class _PerfilPageState extends State<PerfilPage> {
                 style: GoogleFonts.poppins(
                     fontSize: 14, fontWeight: FontWeight.w500),
               ),
-              trailing:const Icon(Icons.arrow_forward_ios_rounded),
+              trailing: const Icon(Icons.arrow_forward_ios_rounded),
               onTap: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>const TerminosCondiciones()));
+                        builder: (context) => const TerminosCondiciones()));
               },
             ),
             ListTile(
@@ -154,7 +163,7 @@ class _CardProfileImageSettingsState extends State<CardProfileImageSettings> {
           borderRadius: BorderRadius.circular(20),
           color: GlobalColors.colorborde,
         ),
-        margin:const  EdgeInsets.all(20),
+        margin: const EdgeInsets.all(20),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -216,4 +225,3 @@ class _CardProfileImageSettingsState extends State<CardProfileImageSettings> {
     );
   }
 }
-
