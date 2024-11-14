@@ -101,34 +101,34 @@ class _DispositvoPageState extends State<DispositvoPage> {
                       'Bluetooth: Conectado',
                       style: GoogleFonts.poppins(fontSize: 14),
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          'Batería:',
-                          style: GoogleFonts.poppins(fontSize: 14),
-                        ),
-                        Transform.rotate(
-                          angle: 1.57,
-                          child: const Icon(
-                            Icons.battery_4_bar_rounded,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Text(
+                    //       'Batería:',
+                    //       style: GoogleFonts.poppins(fontSize: 14),
+                    //     ),
+                    //     Transform.rotate(
+                    //       angle: 1.57,
+                    //       child: const Icon(
+                    //         Icons.battery_4_bar_rounded,
+                    //         color: Colors.grey,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     Text(
                       'Versión: (0.1)',
                       style: GoogleFonts.poppins(fontSize: 14),
                     ),
                   ],
                 ),
-                const SizedBox(
-                  width: 50,
-                ),
-                Image.asset(
-                  'assets/dispo.png',
-                  height: 100,
-                ),
+                // const SizedBox(
+                //   width: 50,
+                // ),
+                // Image.asset(
+                //   'assets/dispo.png',
+                //   height: 100,
+                // ),
               ],
             ),
           ),

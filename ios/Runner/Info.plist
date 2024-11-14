@@ -45,5 +45,18 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Esta aplicación necesita acceder a tu ubicación.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Esta aplicación necesita acceder a tu ubicación siempre.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to access Wi-Fi networks</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need your location to access Wi-Fi networks</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
+
 </dict>
 </plist>

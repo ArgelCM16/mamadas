@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:poolclean/pages/splash.dart';
 
 void main() {
+    WidgetsFlutterBinding.ensureInitialized();
   runApp(const PoolClean());
 }
 

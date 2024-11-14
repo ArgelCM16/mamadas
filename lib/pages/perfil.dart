@@ -2,11 +2,13 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 //import 'package:poolclean/pages/configurar_piscinas_page.dart';
 import 'package:poolclean/pages/informacion_personal.dart';
 import 'package:poolclean/pages/preguntas_frecuentes.dart';
 import 'package:poolclean/pages/terminos_condiciones.dart';
+import 'package:poolclean/utils/get.clima.dart';
 import 'package:poolclean/utils/global.colors.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -71,7 +73,7 @@ class _PerfilPageState extends State<PerfilPage> {
                 // Navigator.push(
                 //   context,
                 //   MaterialPageRoute(
-                //     builder: (context) => const ConfigurarPiscinaPage(),
+                //     builder: (context) => vista,
                 //   ),
                 // );
               },
