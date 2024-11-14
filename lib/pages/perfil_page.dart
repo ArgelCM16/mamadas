@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:poolclean/utils/global.colors.dart';
 
 class ProfileScreen extends StatelessWidget {
-  final String profileImageUrl =
-      'https://your-image-url.com/profile.jpg'; 
+  final String profileImageUrl = 'https://your-image-url.com/profile.jpg';
   final String name = 'Luis Naal Pacheco';
   final String email = 'luis@example.com';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Perfil'),
+        backgroundColor: GlobalColors.mainColor,
+        elevation: 0,
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
         centerTitle: true,
-        backgroundColor: Colors.blueAccent,
+        title: Text(
+          'Perfil',
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+          ),
+        ),
       ),
       body: Center(
         child: Padding(

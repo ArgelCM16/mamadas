@@ -1,19 +1,58 @@
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
 import 'package:google_fonts/google_fonts.dart';
+import 'package:poolclean/pages/connection.wife.dart';
 import 'package:poolclean/utils/global.colors.dart';
 
 class DispositvoPage extends StatefulWidget {
   const DispositvoPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _DispositvoPageState createState() => _DispositvoPageState();
 }
 
 class _DispositvoPageState extends State<DispositvoPage> {
   bool isNotificationsEnabled = false;
   bool isReminderEnabled = false;
+
+  void _showUnlinkDeviceAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Desvincular Dispositivo',
+            style: GoogleFonts.poppins(
+              color: GlobalColors.textColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          content: Text(
+            '¿Está seguro de que desea desvincular este dispositivo? Esta acción no puede deshacerse.',
+            style: GoogleFonts.poppins(),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'Cancelar',
+                style: GoogleFonts.poppins(color: Colors.grey),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Aceptar',
+                  style: GoogleFonts.poppins(
+                    color: GlobalColors.textColor,
+                    fontWeight: FontWeight.w500,
+                  )),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void _showAlert(BuildContext context, String title, String content) {
     showDialog(
@@ -25,7 +64,10 @@ class _DispositvoPageState extends State<DispositvoPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancelar'),
+              child: Text(
+                'Cancelar',
+                style: GoogleFonts.poppins(color: Colors.grey),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -38,33 +80,13 @@ class _DispositvoPageState extends State<DispositvoPage> {
                   }
                 });
               },
-              child: const Text('Aceptar'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDeleteDataAlert(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Borrar Datos'),
-          content: const Text(
-              'Si elige borrar los datos, será un cambio irreversible. ¿Está seguro de su decisión?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                // Añadir aquí la lógica para borrar los datos.
-              },
-              child: const Text('Aceptar'),
+              child: Text(
+                'Aceptar',
+                style: GoogleFonts.poppins(
+                  color: GlobalColors.textColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ],
         );
@@ -98,37 +120,15 @@ class _DispositvoPageState extends State<DispositvoPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Bluetooth: Conectado',
+                      'Wife: Conectado',
                       style: GoogleFonts.poppins(fontSize: 14),
                     ),
-                    // Row(
-                    //   children: [
-                    //     Text(
-                    //       'Batería:',
-                    //       style: GoogleFonts.poppins(fontSize: 14),
-                    //     ),
-                    //     Transform.rotate(
-                    //       angle: 1.57,
-                    //       child: const Icon(
-                    //         Icons.battery_4_bar_rounded,
-                    //         color: Colors.grey,
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                     Text(
                       'Versión: (0.1)',
                       style: GoogleFonts.poppins(fontSize: 14),
                     ),
                   ],
                 ),
-                // const SizedBox(
-                //   width: 50,
-                // ),
-                // Image.asset(
-                //   'assets/dispo.png',
-                //   height: 100,
-                // ),
               ],
             ),
           ),
@@ -210,14 +210,16 @@ class _DispositvoPageState extends State<DispositvoPage> {
                   fontSize: 14, fontWeight: FontWeight.w500),
             ),
             trailing: const Icon(Icons.arrow_forward_ios_rounded),
-            onTap: () => _showDeleteDataAlert(context),
+            onTap: () => _showUnlinkDeviceAlert(context),
           ),
           const SizedBox(
             height: 20,
           ),
           Center(
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                _showUnlinkDeviceAlert(context);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: GlobalColors.mainColor,
                 padding: const EdgeInsets.symmetric(

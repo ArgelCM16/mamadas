@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:poolclean/pages/inicio.dart';
 import 'package:poolclean/utils/global.colors.dart';
+import 'package:poolclean/widgets/menu.navegacion.dart';
 import 'package:poolclean/widgets/text.form.global.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CalcularLitrajePage extends StatefulWidget {
   const CalcularLitrajePage({super.key});
@@ -60,9 +62,9 @@ class _CalcularLitrajePageState extends State<CalcularLitrajePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Calcular Litraje de la Piscina',
-          style: TextStyle(color: Colors.white),
+        title:  Text(
+          'Calcular la cantidad de litros de la Piscina',
+          style: GoogleFonts.poppins(color: Colors.white),
         ),
         backgroundColor: GlobalColors.mainColor,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -77,7 +79,7 @@ class _CalcularLitrajePageState extends State<CalcularLitrajePage> {
               Text(
                 "Seleccione la forma de su piscina",
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 20),
+                style:  GoogleFonts.poppins(fontSize: 20),
               ),
               DropdownButton<String>(
                 value: _tipoPiscina,
@@ -177,12 +179,12 @@ class _CalcularLitrajePageState extends State<CalcularLitrajePage> {
                     backgroundColor: GlobalColors.mainColor,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: const Text(
+                  child:  Text(
                     'Calcular Litraje',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
                   ),
                 ),
               ),
@@ -192,7 +194,7 @@ class _CalcularLitrajePageState extends State<CalcularLitrajePage> {
                   children: [
                     Text(
                       'Litraje estimado: ${_litraje!.toStringAsFixed(2)} litros',
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         color: GlobalColors.textColor,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -207,19 +209,19 @@ class _CalcularLitrajePageState extends State<CalcularLitrajePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const InicioPage()),
+                                builder: (context) => const HomePage()),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: GlobalColors.mainColor,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        child: const Text(
+                        child:  Text(
                           'Continuar',
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
                         ),
                       ),
                     ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:poolclean/pages/inicio.dart';
-import 'package:poolclean/utils/global.colors.dart'; 
+import 'package:poolclean/utils/global.colors.dart';
+import 'package:poolclean/widgets/menu.navegacion.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LitrosModal extends StatefulWidget {
   final Function(int) onContinue;
@@ -26,14 +28,17 @@ class _LitrosModalState extends State<LitrosModal> {
       widget.onContinue(litros);
       Navigator.of(context).pop();
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const InicioPage()));
+          context, MaterialPageRoute(builder: (context) => const HomePage()));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Ingrese el litraje de su piscina'),
+      title: Text(
+        'Ingrese los litros de agua de su piscina',
+        style: GoogleFonts.poppins(),
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -50,9 +55,9 @@ class _LitrosModalState extends State<LitrosModal> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text(
+          child: Text(
             'Cancelar',
-            style: TextStyle(color: Colors.black),
+            style: GoogleFonts.poppins(color: Colors.black),
           ),
         ),
         ElevatedButton(
@@ -60,9 +65,9 @@ class _LitrosModalState extends State<LitrosModal> {
           style: ElevatedButton.styleFrom(
             backgroundColor: GlobalColors.mainColor,
           ),
-          child: const Text(
+          child: Text(
             'Continuar',
-            style: TextStyle(color: Colors.white),
+            style: GoogleFonts.poppins(color: Colors.white),
           ),
         ),
       ],

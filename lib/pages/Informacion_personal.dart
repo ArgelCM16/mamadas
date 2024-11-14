@@ -22,7 +22,7 @@ class _InformacionPersonalState extends State<InformacionPersonal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: GlobalColors.backgroundColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: GlobalColors.mainColor,
         elevation: 0,
@@ -31,11 +31,10 @@ class _InformacionPersonalState extends State<InformacionPersonal> {
         ),
         centerTitle: true,
         title: Text(
-          'Información Personal',
+          'Actualizar Personal',
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 22,
-            fontWeight: FontWeight.w700,
           ),
         ),
         actions: [

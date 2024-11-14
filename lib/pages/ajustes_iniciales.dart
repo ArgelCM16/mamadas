@@ -69,11 +69,9 @@ class _AjustesInicialesPageState extends State<AjustesInicialesPage>
                   Text(
                     '¿Sabes cuántos litros de agua tiene tu piscina?',
                     style: GoogleFonts.poppins(
-                      textStyle: TextStyle(
-                        color: GlobalColors.mainColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      color: GlobalColors.mainColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -84,14 +82,15 @@ class _AjustesInicialesPageState extends State<AjustesInicialesPage>
                       onPressed: _showLitrosModal,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: GlobalColors.mainColor,
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(15),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Sí, conozco la cantidad de litros de mi piscina.',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                        style: GoogleFonts.poppins(
+                            fontSize: 16, color: Colors.white),
                       ),
                     ),
                   ),
@@ -109,14 +108,14 @@ class _AjustesInicialesPageState extends State<AjustesInicialesPage>
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: GlobalColors.colorborde,
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(15),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       child: Text(
                         '¿No sabes cuántos litros tiene tu piscina? Haz clic aquí.',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                             fontSize: 16, color: GlobalColors.textColor),
                       ),
                     ),

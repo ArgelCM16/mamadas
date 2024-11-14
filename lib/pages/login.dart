@@ -19,7 +19,7 @@ class LoginPage extends StatelessWidget {
           ClipPath(
             clipper: CurvedHeaderClipper(),
             child: Container(
-              height: 250,
+              height: 280,
               color: GlobalColors.mainColor,
               child: Center(
                 child: Text(
@@ -47,7 +47,7 @@ class LoginPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 80),
+                            SizedBox(height: 90),
                             Container(
                               alignment: Alignment.center,
                               child: Text(

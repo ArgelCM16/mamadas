@@ -11,7 +11,6 @@ import 'package:poolclean/pages/perfil.dart';
 import 'package:poolclean/pages/notificaciones.dart';
 import 'package:poolclean/utils/global.colors.dart';
 
-// Obtener ubicación del usuario
 Future<Position> _getUserLocation() async {
   bool serviceEnabled;
   LocationPermission permission;
@@ -39,7 +38,6 @@ Future<Position> _getUserLocation() async {
   );
 }
 
-// Obtener datos del clima
 Future<Map<String, dynamic>> _getWeather(double lat, double lon) async {
   String apiKey = "4618861c9f397932000720f218c04e8a";
   String url =
@@ -71,16 +69,15 @@ Future<Map<String, dynamic>> _getWeather(double lat, double lon) async {
   }
 }
 
-// Función para determinar el ícono según la temperatura
 IconData _getWeatherIcon(double temperature) {
   if (temperature < 0) {
-    return Icons.ac_unit; // Nieve o clima frío
+    return Icons.ac_unit;
   } else if (temperature < 20) {
-    return Icons.cloud_outlined; // Nublado
+    return Icons.cloud_outlined;
   } else if (temperature < 30) {
-    return Icons.wb_sunny_outlined; // Soleado
+    return Icons.wb_sunny_outlined;
   } else {
-    return Icons.wb_sunny_outlined; // Calor extremo
+    return Icons.wb_sunny_outlined;
   }
 }
 
@@ -94,7 +91,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   String _weatherMessage = "Obteniendo clima...";
-  IconData _weatherIcon = Icons.cloud_outlined; // Icono por defecto
+  IconData _weatherIcon = Icons.cloud_outlined;
 
   final List<Widget> _pages = [
     const HomePageContent(),
@@ -115,12 +112,12 @@ class _HomePageState extends State<HomePage> {
 
       setState(() {
         _weatherMessage = "$locationName: ${temperature.toStringAsFixed(1)}°C";
-        _weatherIcon = _getWeatherIcon(temperature); // Cambiar el icono
+        _weatherIcon = _getWeatherIcon(temperature);
       });
     } catch (e) {
       setState(() {
-        _weatherMessage = "Error obteniendo clima: $e";
-        _weatherIcon = Icons.error; // Icono de error
+        _weatherMessage = "Error obteniendo clima";
+        _weatherIcon = Icons.error;
       });
     }
   }
@@ -140,12 +137,12 @@ class _HomePageState extends State<HomePage> {
         title: Row(
           children: [
             Icon(
-              _weatherIcon, // Mostrar el ícono dinámico
+              _weatherIcon, 
               color: GlobalColors.mainColor,
             ),
             SizedBox(width: 8),
             Text(
-              _weatherMessage, // Mostrar el mensaje del clima
+              _weatherMessage, 
               style: GoogleFonts.poppins(color: Colors.grey[700], fontSize: 12),
             ),
           ],

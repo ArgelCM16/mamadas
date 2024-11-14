@@ -23,7 +23,7 @@ class InicioPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 70),
+                    const SizedBox(height: 80),
                     Text(
                       'Bienvenido a ',
                       style: GoogleFonts.poppins(
@@ -64,9 +64,15 @@ class InicioPage extends StatelessWidget {
                     height: 150,
                   ),
                   SizedBox(height: 20),
-                  ButtonInicio(),
-                  SizedBox(height: 15),
-                  ButtonCuenta(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: ButtonInicio(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 15),
+                    child: ButtonCuenta(),
+                  ),
                 ],
               ),
             ),

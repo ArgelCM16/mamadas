@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:poolclean/pages/configuracion.wife.dart';
 import 'package:poolclean/pages/crear_cuentra.dart';
 import 'package:poolclean/pages/login.dart';
 import 'package:poolclean/utils/global.colors.dart';
@@ -14,7 +15,7 @@ class ButtonGlobal extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) =>  ConfiguracionWife()),
         );
       },
       child: Container(
