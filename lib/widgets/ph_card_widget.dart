@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences
 
 class PhCard extends StatefulWidget {
   const PhCard({super.key});
@@ -17,17 +18,33 @@ class _PhCardState extends State<PhCard> {
   double? ph;
   bool isConnected = true;
   Timer? connectionTimer;
+  String? poolCleanIp; // Variable para almacenar la IP
 
   @override
   void initState() {
     super.initState();
-    fetchPh();
+    _getStoredIp(); // Obtener la IP almacenada al iniciar
     _checkConnectionTimeout();
   }
 
+  // Método para obtener la IP almacenada en SharedPreferences
+  Future<void> _getStoredIp() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    poolCleanIp = prefs.getString('Poolcleanip'); // Obtiene la IP
+    if (poolCleanIp != null) {
+      fetchPh(); // Llama a la función para obtener el pH si la IP está disponible
+    } else {
+      setState(() {
+        isConnected = false; // Si no hay IP, marca como no conectado
+      });
+    }
+  }
+
   Future<void> fetchPh() async {
+    if (poolCleanIp == null) return; // Si no hay IP, no hace la solicitud
+
     try {
-      final response = await http.get(Uri.parse('http://192.168.4.1/ph'));
+      final response = await http.get(Uri.parse('http://$poolCleanIp/ph')); // Usa la IP obtenida
       if (response.statusCode == 200 && mounted) {
         setState(() {
           ph = double.parse(response.body);

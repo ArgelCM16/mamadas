@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences
 
 class TemperatureCard extends StatefulWidget {
   const TemperatureCard({super.key});
@@ -17,17 +18,33 @@ class _TemperatureCardState extends State<TemperatureCard> {
   double? temperature;
   bool isConnected = true;
   Timer? connectionTimer;
+  String? poolCleanIp; // Variable para almacenar la IP
 
   @override
   void initState() {
     super.initState();
-    fetchTemperature();
+    _getStoredIp(); // Obtener la IP almacenada al iniciar
     _checkConnectionTimeout();
   }
 
+  // Método para obtener la IP almacenada en SharedPreferences
+  Future<void> _getStoredIp() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    poolCleanIp = prefs.getString('Poolcleanip'); // Obtiene la IP
+    if (poolCleanIp != null) {
+      fetchTemperature(); // Llama a la función para obtener la temperatura si la IP está disponible
+    } else {
+      setState(() {
+        isConnected = false; // Si no hay IP, marca como no conectado
+      });
+    }
+  }
+
   Future<void> fetchTemperature() async {
+    if (poolCleanIp == null) return; // Si no hay IP, no hace la solicitud
+
     try {
-      final response = await http.get(Uri.parse('http://192.168.4.1/temp'));
+      final response = await http.get(Uri.parse('http://$poolCleanIp/temp')); // Usa la IP obtenida
       if (response.statusCode == 200 && mounted) {
         setState(() {
           temperature = double.parse(response.body);
