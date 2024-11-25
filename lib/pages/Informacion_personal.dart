@@ -1,23 +1,110 @@
-// ignore_for_file: depend_on_referenced_packages
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:poolclean/utils/provider.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import 'package:poolclean/utils/global.colors.dart';
-import 'package:poolclean/widgets/informacion_personal_widget.dart';
 
 class InformacionPersonal extends StatefulWidget {
   const InformacionPersonal({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _InformacionPersonalState createState() => _InformacionPersonalState();
 }
 
 class _InformacionPersonalState extends State<InformacionPersonal> {
   final _formKey = GlobalKey<FormState>();
   bool _isEditing = false;
-  String _fullName = 'Mishell Jiménez';
-  String _email = 'jimene@gmail.com';
+
+  late TextEditingController _nombreController;
+  late TextEditingController _apellidosController;
+  late TextEditingController _correoController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nombreController = TextEditingController();
+    _apellidosController = TextEditingController();
+    _correoController = TextEditingController();
+    _loadUserData();
+  }
+
+  @override
+  void dispose() {
+    _nombreController.dispose();
+    _apellidosController.dispose();
+    _correoController.dispose();
+    super.dispose();
+  }
+
+  // Cargar los datos del usuario desde SharedPreferences
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _nombreController.text = prefs.getString('user_name') ?? '';
+      _apellidosController.text = prefs.getString('user_lastname') ?? '';
+      _correoController.text = prefs.getString('user_email') ?? '';
+    });
+  }
+
+  // Función para actualizar los datos del usuario
+Future<void> _updateUserData() async {
+  final prefs = await SharedPreferences.getInstance();
+  String id_ = prefs.get('user_id')?.toString() ?? '';
+  String token_ = prefs.get('auth_token')?.toString() ?? '';
+
+  String nombre = _nombreController.text;
+  String apellidos = _apellidosController.text;
+  String correo = _correoController.text;
+
+  try {
+    final response = await http.put(
+      Uri.parse('http://localhost:3000/api/actualizarUsuario/$id_'),
+      headers: {
+        'Authorization': 'Bearer $token_',
+        "Content-Type": "application/json"
+      },
+      body: jsonEncode({
+        'Nombres': nombre,
+        'Apellidos': apellidos,
+        'Correo': correo,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Actualizar el Provider
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.updateUser(id_, nombre, apellidos, correo);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Datos guardados',
+              style: TextStyle(color: Colors.white)),
+          backgroundColor: GlobalColors.mainColor,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Hubo un error al guardar los datos',
+              style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  } catch (e) {
+    print('Error de red: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content:
+            const Text('Error de red', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +118,7 @@ class _InformacionPersonalState extends State<InformacionPersonal> {
         ),
         centerTitle: true,
         title: Text(
-          'Actualizar Personal',
+          'Información personal',
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 22,
@@ -48,15 +135,7 @@ class _InformacionPersonalState extends State<InformacionPersonal> {
                 setState(() {
                   _isEditing = false;
                 });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text(
-                      'Datos guardados',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    backgroundColor: GlobalColors.mainColor,
-                  ),
-                );
+                _updateUserData();
               } else if (!_isEditing) {
                 setState(() {
                   _isEditing = true;
@@ -68,62 +147,58 @@ class _InformacionPersonalState extends State<InformacionPersonal> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const CardPhotoPerfil(),
-            const SizedBox(height: 20),
-            Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Nombre Completo
-                  _buildInputField(
-                    label: 'Nombre Completo',
-                    hint: 'Ingrese su nombre completo',
-                    initialValue: _fullName,
-                    onChanged: (value) {
-                      setState(() {
-                        _fullName = value;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese su nombre completo';
-                      }
-                      return null;
-                    },
-                    enabled: _isEditing,
-                  ),
-                  const SizedBox(height: 20),
-                  _buildInputField(
-                    label: 'Correo Electrónico',
-                    hint: 'Ingrese su correo electrónico',
-                    initialValue: _email,
-                    onChanged: (value) {
-                      setState(() {
-                        _email = value;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese su correo electrónico';
-                      }
-                      String pattern =
-                          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$';
-                      RegExp regex = RegExp(pattern);
-                      if (!regex.hasMatch(value)) {
-                        return 'Por favor ingrese un correo electrónico válido';
-                      }
-                      return null;
-                    },
-                    enabled: _isEditing,
-                  ),
-                ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              _buildInputField(
+                label: 'Nombre',
+                hint: 'Ingrese su nombre',
+                controller: _nombreController,
+                enabled: _isEditing,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingrese su nombre';
+                  }
+                  return null;
+                },
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+              _buildInputField(
+                label: 'Apellidos',
+                hint: 'Ingrese sus apellidos',
+                controller: _apellidosController,
+                enabled: _isEditing,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingrese sus apellidos';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              _buildInputField(
+                label: 'Correo Electrónico',
+                hint: 'Ingrese su correo electrónico',
+                controller: _correoController,
+                enabled: _isEditing,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor ingrese su correo electrónico';
+                  }
+                  String pattern =
+                      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$';
+                  RegExp regex = RegExp(pattern);
+                  if (!regex.hasMatch(value)) {
+                    return 'Por favor ingrese un correo electrónico válido';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -132,10 +207,9 @@ class _InformacionPersonalState extends State<InformacionPersonal> {
   Widget _buildInputField({
     required String label,
     required String hint,
-    required String initialValue,
-    required Function(String) onChanged,
-    required String? Function(String?) validator,
+    required TextEditingController controller,
     required bool enabled,
+    required String? Function(String?) validator,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,10 +225,10 @@ class _InformacionPersonalState extends State<InformacionPersonal> {
         const SizedBox(height: 8),
         TextFormField(
           enabled: enabled,
-          initialValue: initialValue,
+          controller: controller,
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.white,
+            fillColor: enabled ? Colors.white : Colors.grey.shade200,
             hintText: hint,
             hintStyle: GoogleFonts.poppins(color: Colors.grey.shade600),
             border: OutlineInputBorder(
@@ -163,11 +237,8 @@ class _InformacionPersonalState extends State<InformacionPersonal> {
             ),
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-            prefixIcon:
-                Icon(Icons.person_outline, color: GlobalColors.mainColor),
           ),
           validator: validator,
-          onChanged: onChanged,
         ),
       ],
     );

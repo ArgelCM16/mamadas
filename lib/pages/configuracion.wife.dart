@@ -93,7 +93,7 @@ class _ConfiguracionWifeState extends State<ConfiguracionWife>
                     ),
                     child: Icon(
                       Icons.arrow_forward_rounded,
-                      size: 40.0,
+                      size: 50.0,
                       color: GlobalColors.textColor,
                     ),
                   ),

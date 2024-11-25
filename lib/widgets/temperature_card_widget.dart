@@ -44,7 +44,8 @@ class _TemperatureCardState extends State<TemperatureCard> {
     if (poolCleanIp == null) return; // Si no hay IP, no hace la solicitud
 
     try {
-      final response = await http.get(Uri.parse('http://$poolCleanIp/temp')); // Usa la IP obtenida
+      final response = await http
+          .get(Uri.parse('http://$poolCleanIp/temp')); // Usa la IP obtenida
       if (response.statusCode == 200 && mounted) {
         setState(() {
           temperature = double.parse(response.body);
@@ -95,30 +96,32 @@ class _TemperatureCardState extends State<TemperatureCard> {
                 style: GoogleFonts.poppins(
                     fontSize: 16, fontWeight: FontWeight.w700)),
             const SizedBox(height: 10),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(
-                  Icons.thermostat_rounded,
-                  color: Colors.blue,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    isConnected
-                        ? (temperature != null
-                            ? '${temperature!.toStringAsFixed(1)} °C'
-                            : 'Cargando...')
-                        : 'No conectado',
-                    style: GoogleFonts.poppins(
-                        color: Colors.grey[700],
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.thermostat_rounded,
+                    color: Colors.blue,
                   ),
-                )
-              ],
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      isConnected
+                          ? (temperature != null
+                              ? '${temperature!.toStringAsFixed(1)} °C'
+                              : 'Cargando...')
+                          : 'No conectado',
+                      style: GoogleFonts.poppins(
+                          color: Colors.grey[700],
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  )
+                ],
+              ),
             )
           ],
         ),

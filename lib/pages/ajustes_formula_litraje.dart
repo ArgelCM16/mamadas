@@ -1,9 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:poolclean/pages/detalles_piscina.dart';
 import 'package:poolclean/pages/inicio.dart';
 import 'package:poolclean/utils/global.colors.dart';
 import 'package:poolclean/widgets/menu.navegacion.dart';
 import 'package:poolclean/widgets/text.form.global.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CalcularLitrajePage extends StatefulWidget {
   const CalcularLitrajePage({super.key});
@@ -47,6 +51,74 @@ class _CalcularLitrajePageState extends State<CalcularLitrajePage> {
     }
   }
 
+Future<void> _guardarPiscina() async {
+  final prefs = await SharedPreferences.getInstance();
+  String id_ = prefs.get('user_id')?.toString() ?? '';
+  String token_ = prefs.get('auth_token')?.toString() ?? '';
+
+  final double ancho = double.tryParse(_anchoController.text) ?? 0;
+  final double largo = double.tryParse(_largoController.text) ?? 0;
+  final double profundidad = double.tryParse(_profundidadController.text) ?? 0;
+  final double diametro = double.tryParse(_diametroController.text) ?? 0;
+
+  try {
+    final response = await http.post(
+      Uri.parse('http://localhost:3000/api/crearPiscina'),
+      headers: {
+        'Authorization': 'Bearer $token_',
+        "Content-Type": "application/json"
+      },
+      body: jsonEncode({
+        'id_usuario': id_,
+        'tipo_piscina': _tipoPiscina,
+        'ancho': ancho,
+        'largo': largo,
+        'profundidad': profundidad,
+        'diametro': diametro,
+      }),
+    );
+
+    // Imprime el código de estado y el cuerpo de la respuesta para depuración
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:  Text('Piscina guardada correctamente.',
+              style: TextStyle(color: Colors.white)),
+          backgroundColor: GlobalColors.mainColor,
+        ),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    } else {
+      // Manejo de errores con mensaje del servidor
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Error al guardar: ${response.body}',
+            style: const TextStyle(color: Colors.black),
+          ),
+        backgroundColor: Colors.grey[500],
+        ),
+      );
+    }
+  } catch (e) {
+    print('Error al guardar piscina: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Hubo un problema al conectar con el servidor.',
+            style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.grey[500],
+      ),
+    );
+  }
+}
+
+
   void _limpiarFormulario() {
     _anchoController.clear();
     _largoController.clear();
@@ -62,7 +134,7 @@ class _CalcularLitrajePageState extends State<CalcularLitrajePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text(
+        title: Text(
           'Calcular la cantidad de litros de la Piscina',
           style: GoogleFonts.poppins(color: Colors.white),
         ),
@@ -79,7 +151,7 @@ class _CalcularLitrajePageState extends State<CalcularLitrajePage> {
               Text(
                 "Seleccione la forma de su piscina",
                 textAlign: TextAlign.center,
-                style:  GoogleFonts.poppins(fontSize: 20),
+                style: GoogleFonts.poppins(fontSize: 20),
               ),
               DropdownButton<String>(
                 value: _tipoPiscina,
@@ -182,9 +254,10 @@ class _CalcularLitrajePageState extends State<CalcularLitrajePage> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child:  Text(
+                  child: Text(
                     'Calcular Litraje',
-                    style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
+                    style:
+                        GoogleFonts.poppins(fontSize: 16, color: Colors.white),
                   ),
                 ),
               ),
@@ -196,22 +269,14 @@ class _CalcularLitrajePageState extends State<CalcularLitrajePage> {
                       'Litraje estimado: ${_litraje!.toStringAsFixed(2)} litros',
                       style: GoogleFonts.poppins(
                         color: GlobalColors.textColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
                       ),
-                      textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
                     SizedBox(
                       width: 200,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const HomePage()),
-                          );
-                        },
+                        onPressed: _guardarPiscina,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: GlobalColors.mainColor,
                           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -219,9 +284,10 @@ class _CalcularLitrajePageState extends State<CalcularLitrajePage> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        child:  Text(
-                          'Continuar',
-                          style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
+                        child: Text(
+                          'Guardar Piscina',
+                          style: GoogleFonts.poppins(
+                              fontSize: 16, color: Colors.white),
                         ),
                       ),
                     ),

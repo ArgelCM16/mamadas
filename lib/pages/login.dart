@@ -1,14 +1,74 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:poolclean/pages/crear_cuentra.dart';
+import 'package:poolclean/pages/home.dart';
 import 'package:poolclean/utils/global.colors.dart';
-import 'package:poolclean/widgets/button.global.dart';
+import 'package:poolclean/widgets/menu.navegacion.dart';
 import 'package:poolclean/widgets/text.form.global.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
   final TextEditingController correoController = TextEditingController();
   final TextEditingController contraController = TextEditingController();
+
+  Future<void> _login(BuildContext context) async {
+    const String apiUrl = "http://localhost:3000/api/login";
+
+    // Verificar si los campos están vacíos
+    if (correoController.text.isEmpty || contraController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, completa todos los campos')),
+      );
+      return;
+    }
+
+    try {
+      // Realizar la solicitud HTTP POST
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({
+          "Correo": correoController.text,
+          "password": contraController.text,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print('Respuesta del servidor: $data');
+
+        if (data['token'] != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('auth_token', data['token']);
+          await prefs.setInt('user_id', data['user']['Id']);
+          await prefs.setString('user_name', data['user']['Nombres']);
+          await prefs.setString('user_lastname', data['user']['Apellidos']);
+          await prefs.setString('user_email', data['user']['Correo']);
+
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(content: Text("Inicio de sesión exitoso")),
+          // );
+          Navigator.pushReplacementNamed(context, '/conectarwife');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(data['message'] ?? "Credenciales incorrectas")),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error en el servidor. Intenta más tarde")),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error de conexión. Revisa tu red")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +147,32 @@ class LoginPage extends StatelessWidget {
                               textInputType: TextInputType.text,
                             ),
                             SizedBox(height: 15),
-                            ButtonGlobal(),
+                            InkWell(
+                              onTap: () => _login(context),
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    color: GlobalColors.mainColor,
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: GlobalColors.colorborde,
+                                      width: 1,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 10)
+                                    ]),
+                                child: Text(
+                                  'Iniciar Sesión',
+                                  style: GoogleFonts.poppins(
+                                      textStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600)),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -106,7 +191,7 @@ class LoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '¿Aun no tienes cuenta?',
+              '¿Aún no tienes cuenta?',
               style: GoogleFonts.poppins(
                   textStyle: TextStyle(
                 color: Colors.grey[700],

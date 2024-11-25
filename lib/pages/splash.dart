@@ -1,10 +1,7 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:poolclean/pages/ajustes_iniciales.dart';
 import 'package:poolclean/pages/inicio.dart';
 import 'package:poolclean/utils/global.colors.dart';
 
@@ -14,7 +11,9 @@ class Splash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Timer(const Duration(seconds: 5), () {
-      Get.to(const InicioPage());
+      if (Get.currentRoute == '/') {
+        Get.off(const InicioPage());
+      }
     });
 
     return Scaffold(

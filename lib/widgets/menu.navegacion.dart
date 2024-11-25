@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
               _weatherIcon, 
               color: GlobalColors.mainColor,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               _weatherMessage, 
               style: GoogleFonts.poppins(color: Colors.grey[700], fontSize: 12),
@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => NotificacionesPage()),
+                MaterialPageRoute(builder: (context) => const NotificacionesPage()),
               );
             },
           ),

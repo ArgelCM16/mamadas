@@ -220,6 +220,7 @@ class HomePageContent extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.all(5.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           TemperatureCard(),
                           SizedBox(height: 10),
@@ -228,18 +229,18 @@ class HomePageContent extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Column(
-                        children: [
-                          PhCard(),
-                          SizedBox(height: 10),
-                          PhCard(),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Expanded(
+                  //   child: Padding(
+                  //     padding: EdgeInsets.all(5.0),
+                  //     child: Column(
+                  //       children: [
+                  //         PhCard(),
+                  //         SizedBox(height: 10),
+                  //         PhCard(),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
