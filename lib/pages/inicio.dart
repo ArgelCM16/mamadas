@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:poolclean/utils/global.colors.dart';
 import 'package:poolclean/widgets/button.global.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Importar SharedPreferences
 
 class InicioPage extends StatelessWidget {
   const InicioPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Llama a la función para verificar el token al inicio
+    _checkAuthToken(context);
+
     return Scaffold(
       backgroundColor: GlobalColors.mainColor,
       body: Stack(
@@ -63,14 +67,13 @@ class InicioPage extends StatelessWidget {
                     'assets/logo.png',
                     height: 150,
                   ),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                  const SizedBox(height: 20),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     child: ButtonInicio(),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 15),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                     child: ButtonCuenta(),
                   ),
                 ],
@@ -80,6 +83,16 @@ class InicioPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _checkAuthToken(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final authToken = prefs.getString('auth_token'); // Verifica si hay token
+
+    if (authToken != null && authToken.isNotEmpty) {
+      // Si el token existe, redirige a la página de inicio
+       Navigator.pushReplacementNamed(context, '/conectarwife');
+    }
   }
 }
 

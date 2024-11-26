@@ -49,6 +49,7 @@ class LoginPage extends StatelessWidget {
           await prefs.setString('user_email', data['user']['Correo']);
 
           // ScaffoldMessenger.of(context).showSnackBar(
+          await checkAndSaveUserIp(context, data['token'], data['user']['Id']);
           //   SnackBar(content: Text("Inicio de sesión exitoso")),
           // );
           Navigator.pushReplacementNamed(context, '/conectarwife');
@@ -69,6 +70,36 @@ class LoginPage extends StatelessWidget {
       );
     }
   }
+
+  Future<void> checkAndSaveUserIp(BuildContext context, String token, int userId) async {
+  try {
+    // URL de la API con el ID de usuario
+    final url = 'https://poolcleanapi-production.up.railway.app/api/verUsuarioIp/$userId';
+    
+    // Realizar solicitud GET con el token en los encabezados
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      // Parsear la respuesta JSON
+      final data = json.decode(response.body);
+
+      if (data['usuario_ip'] != null) {
+        // Guardar la IP en SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('Poolcleanip', data['usuario_ip']);
+      } else {
+        print('No se encontró una dirección IP para este usuario.');
+      }
+    } else {
+      print('Error al obtener los datos del usuario: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error durante la solicitud: $e');
+  }
+}
 
   @override
   Widget build(BuildContext context) {

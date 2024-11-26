@@ -1,5 +1,3 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,11 +17,14 @@ class _PhCardState extends State<PhCard> {
   bool isConnected = true;
   Timer? connectionTimer;
   String? poolCleanIp; // Variable para almacenar la IP
+  String? authToken;  // Token de autenticación
+  int? userId;        // ID de usuario
 
   @override
   void initState() {
     super.initState();
     _getStoredIp(); // Obtener la IP almacenada al iniciar
+    _updateIpInApi(); // Obtener el auth_token y user_id
     _checkConnectionTimeout();
   }
 
@@ -37,6 +38,34 @@ class _PhCardState extends State<PhCard> {
       setState(() {
         isConnected = false; // Si no hay IP, marca como no conectado
       });
+    }
+  }
+
+
+  // Método para actualizar la IP en la API
+  Future<void> _updateIpInApi() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    poolCleanIp = prefs.getString('Poolcleanip'); // Obtiene la IP
+    authToken = prefs.getString('auth_token'); // Obtiene el token
+    userId = prefs.getInt('user_id'); // Obtiene el id del usuario
+    try {
+      final response = await http.put(
+        Uri.parse('https://poolcleanapi-production.up.railway.app/api/asignarIp/$userId'),
+        headers: {
+          'Authorization': 'Bearer $authToken',
+        },
+        body: {
+          'usuario_ip': poolCleanIp,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('IP actualizada exitosamente');
+      } else {
+        throw Exception('Error al actualizar la IP');
+      }
+    } catch (e) {
+      print('Error al conectar con la API: $e');
     }
   }
 
@@ -80,6 +109,9 @@ class _PhCardState extends State<PhCard> {
 
   @override
   Widget build(BuildContext context) {
+    // Aquí, cada vez que se reconstruya el widget, se actualizará la IP en la API
+    _updateIpInApi();
+
     return Card(
       color: Colors.white,
       elevation: 8.0,
@@ -100,7 +132,7 @@ class _PhCardState extends State<PhCard> {
               children: [
                 const Icon(
                   Icons.water_drop_rounded,
-                  color: Colors.blue, 
+                  color: Colors.blue,
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -117,9 +149,9 @@ class _PhCardState extends State<PhCard> {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
-                )
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),

@@ -18,41 +18,38 @@ class _WiFiConnectionPageState extends State<WiFiConnectionPage> {
   List<WiFiAccessPoint> _wifiNetworks = [];
   bool _isConnectedToPoolclean = false;
   String? _selectedSSID;
+    String? poolCleanIp; // Variable para almacenar la IP
   TextEditingController _passwordController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    _checkInitialScreen();
     _loadSavedWiFiConfig(); // Cargar configuración guardada
     _checkCurrentWiFi();
     _requestPermissions();
   }
 
-// ... other imports
-
 Future<void> _checkInitialScreen() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? isConnected = prefs.getString('Connected');
+    poolCleanIp = prefs.getString('Poolcleanip'); // Obtiene la IP
 
-  if (isConnected == 'si') {
-    // If previously connected, directly navigate to HomePage
+  if (poolCleanIp != null) {
+    // Si ya tiene un user_id guardado, ir directamente a HomePage
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => HomePage()),
     );
-  } else {
-    _checkCurrentWiFi();
-  }
+  } 
 }
+
 
 Future<void> _checkCurrentWiFi() async {
   String currentSSID = await WiFiForIoTPlugin.getSSID() ?? "";
   setState(() {
     _isConnectedToPoolclean = currentSSID == "Poolclean";
   });
-
 }
-
   // Solicita los permisos necesarios para escanear redes Wi-Fi
   Future<void> _requestPermissions() async {
     var status = await Permission.location.request();
@@ -98,6 +95,7 @@ Future<void> _checkCurrentWiFi() async {
 
 
       _showConnectionSuccessDialog(poolCleanIp);
+      
     } else {
       _showConnectionErrorDialog();
     }
