@@ -54,7 +54,7 @@ class _LitrosModalState extends State<LitrosModal> {
       String token_ = prefs.get('auth_token')?.toString() ?? '';
 
       final response = await http.post(
-        Uri.parse('http://localhost:3000/api/crearPiscinaPorLitros'),
+        Uri.parse('https://poolcleanapi-production.up.railway.app/api/crearPiscinaPorLitros'),
         headers: {
           'Authorization': 'Bearer $token_',
           'Content-Type': 'application/json',

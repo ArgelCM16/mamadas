@@ -37,7 +37,7 @@ class _PerfilPageState extends State<PerfilPage> {
       String token_ = prefs.getString('auth_token') ?? '';
 
       if (id_.isNotEmpty && token_.isNotEmpty) {
-        final url = Uri.parse('http://localhost:3000/api/obtenerPiscinas/$id_');
+        final url = Uri.parse('https://poolcleanapi-production.up.railway.app/api/obtenerPiscinas/$id_');
         final response = await http.get(
           url,
           headers: {'Authorization': 'Bearer $token_'},

@@ -39,7 +39,7 @@ class _IConfiguracionPiscinaState extends State<IConfiguracionPiscina> {
       String token_ = prefs.getString('auth_token') ?? '';
 
       if (id_.isNotEmpty && token_.isNotEmpty) {
-        final url = Uri.parse('http://localhost:3000/api/obtenerPiscinas/$id_');
+        final url = Uri.parse('https://poolcleanapi-production.up.railway.app/api/obtenerPiscinas/$id_');
         final response = await http.get(
           url,
           headers: {'Authorization': 'Bearer $token_'},
@@ -99,7 +99,7 @@ class _IConfiguracionPiscinaState extends State<IConfiguracionPiscina> {
       }
 
       final url =
-          Uri.parse('http://localhost:3000/api/actualizarPiscina/$piscinaId');
+          Uri.parse('https://poolcleanapi-production.up.railway.app/api/actualizarPiscina/$piscinaId');
       final response = await http.put(
         url,
         headers: {
@@ -149,7 +149,7 @@ class _IConfiguracionPiscinaState extends State<IConfiguracionPiscina> {
       }
 
       final url =
-          Uri.parse('http://localhost:3000/api/borrarPiscina/$piscinaId');
+          Uri.parse('https://poolcleanapi-production.up.railway.app/api/borrarPiscina/$piscinaId');
       final response = await http.delete(
         url,
         headers: {

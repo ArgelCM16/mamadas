@@ -237,7 +237,7 @@ class _ButtonGlobalCuenta extends StatelessWidget {
         'password': contraController.text,
       };
 
-      const String url = 'http://localhost:3000/api/crearCuenta';
+      const String url = 'https://poolcleanapi-production.up.railway.app/api/crearCuenta';
 
       try {
         final response = await http.post(

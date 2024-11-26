@@ -65,7 +65,7 @@ void _showUnlinkDeviceAlert(BuildContext context) async {
 
 Future<void> _deleteUser(
     String userId, String authToken, BuildContext context) async {
-  final url = Uri.parse('http://localhost:3000/api/borrarUsuario/$userId');
+  final url = Uri.parse('https://poolcleanapi-production.up.railway.app/api/borrarUsuario/$userId');
 
   try {
     final response = await http.delete(

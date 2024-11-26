@@ -61,7 +61,7 @@ Future<void> _updateUserData() async {
 
   try {
     final response = await http.put(
-      Uri.parse('http://localhost:3000/api/actualizarUsuario/$id_'),
+      Uri.parse('https://poolcleanapi-production.up.railway.app/api/actualizarUsuario/$id_'),
       headers: {
         'Authorization': 'Bearer $token_',
         "Content-Type": "application/json"

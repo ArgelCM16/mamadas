@@ -63,7 +63,7 @@ Future<void> _guardarPiscina() async {
 
   try {
     final response = await http.post(
-      Uri.parse('http://localhost:3000/api/crearPiscina'),
+      Uri.parse('https://poolcleanapi-production.up.railway.app/api/crearPiscina'),
       headers: {
         'Authorization': 'Bearer $token_',
         "Content-Type": "application/json"
