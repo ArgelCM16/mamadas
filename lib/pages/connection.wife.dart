@@ -28,21 +28,30 @@ class _WiFiConnectionPageState extends State<WiFiConnectionPage> {
     _requestPermissions();
   }
 
-  // Verifica si ya estás conectado a la red Poolclean
-  Future<void> _checkCurrentWiFi() async {
-    String currentSSID = await WiFiForIoTPlugin.getSSID() ?? "";
-    setState(() {
-      _isConnectedToPoolclean = currentSSID == "Poolclean";
-    });
+// ... other imports
 
-    if (_isConnectedToPoolclean) {
-      // Redirigir a la página principal si ya está conectado
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    }
+Future<void> _checkInitialScreen() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? isConnected = prefs.getString('Connected');
+
+  if (isConnected == 'si') {
+    // If previously connected, directly navigate to HomePage
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
+    );
+  } else {
+    _checkCurrentWiFi();
   }
+}
+
+Future<void> _checkCurrentWiFi() async {
+  String currentSSID = await WiFiForIoTPlugin.getSSID() ?? "";
+  setState(() {
+    _isConnectedToPoolclean = currentSSID == "Poolclean";
+  });
+
+}
 
   // Solicita los permisos necesarios para escanear redes Wi-Fi
   Future<void> _requestPermissions() async {
@@ -85,6 +94,8 @@ class _WiFiConnectionPageState extends State<WiFiConnectionPage> {
       await prefs.setString('Poolcleanip', poolCleanIp);
       await prefs.setString('ssid', ssid); // Guardar SSID
       await prefs.setString('password', password); // Guardar contraseña
+      await prefs.setString('Conectado', "si"); // Guardar conexion
+
 
       _showConnectionSuccessDialog(poolCleanIp);
     } else {
