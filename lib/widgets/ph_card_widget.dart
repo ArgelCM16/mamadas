@@ -24,7 +24,7 @@ class _PhCardState extends State<PhCard> {
   void initState() {
     super.initState();
     _getStoredIp(); // Obtener la IP almacenada al iniciar
-    _updateIpInApi(); // Obtener el auth_token y user_id
+    // _getAuthData(); // Obtener el auth_token y user_id
     _checkConnectionTimeout();
   }
 
@@ -41,13 +41,20 @@ class _PhCardState extends State<PhCard> {
     }
   }
 
+  // // Método para obtener auth_token y user_id
+  // Future<void> _getAuthData() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   authToken = prefs.getString('auth_token'); // Obtiene el token
+  //   userId = prefs.getInt('user_id'); // Obtiene el id del usuario
+  //   if (authToken != null && userId != null) {
+  //     _updateIpInApi(); // Si se tiene el token y id, actualiza la IP en la API
+  //   }
+  // }
 
   // Método para actualizar la IP en la API
   Future<void> _updateIpInApi() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    poolCleanIp = prefs.getString('Poolcleanip'); // Obtiene la IP
-    authToken = prefs.getString('auth_token'); // Obtiene el token
-    userId = prefs.getInt('user_id'); // Obtiene el id del usuario
+    if (poolCleanIp == null || authToken == null || userId == null) return;
+
     try {
       final response = await http.put(
         Uri.parse('https://poolcleanapi-production.up.railway.app/api/asignarIp/$userId'),
@@ -110,7 +117,8 @@ class _PhCardState extends State<PhCard> {
   @override
   Widget build(BuildContext context) {
     // Aquí, cada vez que se reconstruya el widget, se actualizará la IP en la API
-    _updateIpInApi();
+              _updateIpInApi();
+
 
     return Card(
       color: Colors.white,
@@ -155,6 +163,7 @@ class _PhCardState extends State<PhCard> {
           ],
         ),
       ),
+
     );
   }
 }

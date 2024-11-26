@@ -43,7 +43,7 @@ class LoginPage extends StatelessWidget {
         if (data['token'] != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('auth_token', data['token']);
-          await prefs.setInt('user_id', data['user']['Id']);
+          await prefs.setInt('user_id', data['user']['id']);
           await prefs.setString('user_name', data['user']['Nombres']);
           await prefs.setString('user_lastname', data['user']['Apellidos']);
           await prefs.setString('user_email', data['user']['Correo']);

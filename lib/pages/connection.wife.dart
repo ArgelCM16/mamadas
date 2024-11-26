@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:poolclean/pages/ajustes_iniciales.dart';
 import 'package:poolclean/utils/global.colors.dart';
@@ -29,18 +31,58 @@ class _WiFiConnectionPageState extends State<WiFiConnectionPage> {
     _checkCurrentWiFi();
     _requestPermissions();
   }
-
+  
 Future<void> _checkInitialScreen() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-    poolCleanIp = prefs.getString('Poolcleanip'); // Obtiene la IP
+  poolCleanIp = prefs.getString('Poolcleanip'); // Obtiene la IP almacenada
 
-  if (poolCleanIp != null) {
-    // Si ya tiene un user_id guardado, ir directamente a HomePage
+  // Si la IP no está en cache, consulta la API
+  if (poolCleanIp == null) {
+    // Recupera el token de autenticación y el ID de usuario
+    String? authToken = prefs.getString('auth_token');
+    int? userId = prefs.getInt('user_id');
+
+    // Verifica que el token y el userId estén disponibles
+    if (authToken == null || userId == null) {
+      // Si no tienes los datos necesarios, no hace nada
+      return;
+    }
+
+    // Consulta a la API para obtener la IP del usuario
+    final response = await http.get(
+      Uri.parse('https://poolcleanapi-production.up.railway.app/api/verUsuarioIp/$userId'),
+      headers: {
+        'Authorization': 'Bearer $authToken',
+      },
+    );
+
+    // Si la respuesta es exitosa y existe una IP, la guardamos en el cache
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      final String? usuarioIp = data['usuario_ip'];
+
+      if (usuarioIp != null) {
+        // Si existe la IP del usuario, la guardamos en el cache
+        await prefs.setString('Poolcleanip', usuarioIp);
+        poolCleanIp = usuarioIp; // Asigna la IP para usarla más tarde
+
+        // Luego navega a HomePage
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
+    } else {
+      // Si la consulta falla, puedes manejar el error como prefieras
+      print('Error al obtener la IP del usuario desde la API');
+    }
+  } else {
+    // Si ya hay una IP en cache, solo navega a HomePage
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => HomePage()),
     );
-  } 
+  }
 }
 
 
