@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:poolclean/pages/ajustes_iniciales.dart';
 import 'package:poolclean/pages/connection.wife.dart';
@@ -14,9 +15,12 @@ import 'package:poolclean/widgets/menu.navegacion.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const PoolClean());
-}
 
+  // Bloquea la orientación a vertical
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
+    runApp(const PoolClean());
+  });
+}
 class PoolClean extends StatelessWidget {
   const PoolClean({super.key});
 
@@ -24,7 +28,7 @@ class PoolClean extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()), // Registrar UserProvider
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
@@ -35,10 +39,9 @@ class PoolClean extends StatelessWidget {
           GetPage(name: '/sesion', page: () => LoginPage()),
           GetPage(name: '/inicio', page: () => const InicioPage()),
           GetPage(name: '/wife', page: () => ConfiguracionWife()),
-          GetPage(name: '/ajustespiscina', page: () => const AjustesInicialesPage()),          
+          GetPage(name: '/ajustespiscina', page: () => const AjustesInicialesPage()),
           GetPage(name: '/editarpiscina', page: () => const IConfiguracionPiscina()),
-          GetPage(name: '/conectarwife', page: () => WiFiConnectionPage(),)
-
+          GetPage(name: '/conectarwife', page: () => WiFiConnectionPage()),
         ],
       ),
     );
