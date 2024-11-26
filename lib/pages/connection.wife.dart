@@ -20,8 +20,12 @@ class _WiFiConnectionPageState extends State<WiFiConnectionPage> {
   List<WiFiAccessPoint> _wifiNetworks = [];
   bool _isConnectedToPoolclean = false;
   String? _selectedSSID;
-    String? poolCleanIp; // Variable para almacenar la IP
+  String? poolCleanIp; // Variable para almacenar la IP
   TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false; // Indicador de carga para escanear redes
+  bool _isConnecting = false; // Indicador de carga para la conexión Wi-Fi
+  bool _scanning =
+      false; // Para evitar que se vuelva a escanear cuando estamos en la pantalla de contraseña
 
   @override
   void initState() {
@@ -31,67 +35,31 @@ class _WiFiConnectionPageState extends State<WiFiConnectionPage> {
     _checkCurrentWiFi();
     _requestPermissions();
   }
-  
-Future<void> _checkInitialScreen() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  poolCleanIp = prefs.getString('Poolcleanip'); // Obtiene la IP almacenada
 
-  // Si la IP no está en cache, consulta la API
-  if (poolCleanIp == null) {
-    // Recupera el token de autenticación y el ID de usuario
-    String? authToken = prefs.getString('auth_token');
-    int? userId = prefs.getInt('user_id');
+  Future<void> _checkInitialScreen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    poolCleanIp = prefs.getString('Poolcleanip'); // Obtiene la IP
 
-    // Verifica que el token y el userId estén disponibles
-    if (authToken == null || userId == null) {
-      // Si no tienes los datos necesarios, no hace nada
-      return;
+    if (poolCleanIp != null) {
+      // Si ya tiene un user_id guardado, ir directamente a HomePage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
     }
-
-    // Consulta a la API para obtener la IP del usuario
-    final response = await http.get(
-      Uri.parse('https://poolcleanapi-production.up.railway.app/api/verUsuarioIp/$userId'),
-      headers: {
-        'Authorization': 'Bearer $authToken',
-      },
-    );
-
-    // Si la respuesta es exitosa y existe una IP, la guardamos en el cache
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      final String? usuarioIp = data['usuario_ip'];
-
-      if (usuarioIp != null) {
-        // Si existe la IP del usuario, la guardamos en el cache
-        await prefs.setString('Poolcleanip', usuarioIp);
-        poolCleanIp = usuarioIp; // Asigna la IP para usarla más tarde
-
-        // Luego navega a HomePage
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      }
-    } else {
-      // Si la consulta falla, puedes manejar el error como prefieras
-      print('Error al obtener la IP del usuario desde la API');
-    }
-  } else {
-    // Si ya hay una IP en cache, solo navega a HomePage
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage()),
-    );
   }
-}
 
+  Future<void> _checkCurrentWiFi() async {
+    String currentSSID = await WiFiForIoTPlugin.getSSID() ?? "";
+    setState(() {
+      _isConnectedToPoolclean = currentSSID == "Totalplay-2.4G-d3d8";
+    });
 
-Future<void> _checkCurrentWiFi() async {
-  String currentSSID = await WiFiForIoTPlugin.getSSID() ?? "";
-  setState(() {
-    _isConnectedToPoolclean = currentSSID == "Poolclean";
-  });
-}
+    if (_isConnectedToPoolclean) {
+      _scanForWiFi(); // Escanea las redes Wi-Fi si está conectado a Poolclean
+    }
+  }
+
   // Solicita los permisos necesarios para escanear redes Wi-Fi
   Future<void> _requestPermissions() async {
     var status = await Permission.location.request();
@@ -104,9 +72,20 @@ Future<void> _checkCurrentWiFi() async {
 
   // Inicia el escaneo de redes Wi-Fi
   Future<void> _scanForWiFi() async {
+    if (_scanning) return; // Si ya estamos escaneando, no volvemos a hacerlo
+    setState(() {
+      _scanning = true; // Activar el estado de escaneo
+      _wifiNetworks = []; // Limpia la lista antes de iniciar el escaneo
+      _isLoading = true; // Activar el indicador de carga
+    });
+
     bool scanStarted = await WiFiScan.instance.startScan();
     if (!scanStarted) {
       print("No se pudo iniciar el escaneo de redes Wi-Fi.");
+      setState(() {
+        _isLoading = false; // Desactivar el indicador de carga
+        _scanning = false; // Desactivar el estado de escaneo
+      });
       return;
     }
 
@@ -114,17 +93,30 @@ Future<void> _checkCurrentWiFi() async {
         .listen((List<WiFiAccessPoint> networks) {
       setState(() {
         _wifiNetworks = networks;
+        _isLoading =
+            false; // Desactivar el indicador de carga cuando los resultados estén disponibles
+        _scanning = false; // Desactivar el estado de escaneo
       });
     });
   }
 
   // Conectar al Wi-Fi y enviar la petición al ESP32
   Future<void> _connectToWiFi(String ssid, String password) async {
+    setState(() {
+      _isConnecting =
+          true; // Activar el indicador de carga mientras nos conectamos
+    });
+
     final response = await http.post(
       Uri.parse(
           'http://192.168.4.1/connect'), // Asegúrate de que la IP sea correcta
       body: {'ssid': ssid, 'password': password},
     );
+
+    setState(() {
+      _isConnecting =
+          false; // Desactivar el indicador de carga después de intentar la conexión
+    });
 
     if (response.statusCode == 200) {
       String poolCleanIp = _parseIpFromResponse(response.body);
@@ -133,11 +125,9 @@ Future<void> _checkCurrentWiFi() async {
       await prefs.setString('Poolcleanip', poolCleanIp);
       await prefs.setString('ssid', ssid); // Guardar SSID
       await prefs.setString('password', password); // Guardar contraseña
-      await prefs.setString('Conectado', "si"); // Guardar conexion
-
+      await prefs.setString('Conectado', "si"); // Guardar conexión
 
       _showConnectionSuccessDialog(poolCleanIp);
-      
     } else {
       _showConnectionErrorDialog();
     }
@@ -243,40 +233,53 @@ Future<void> _checkCurrentWiFi() async {
                       style: GoogleFonts.poppins(
                           fontSize: 16, fontWeight: FontWeight.w500),
                       textAlign: TextAlign.center),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: _checkCurrentWiFi,
-                    child: Text("Verificar conexión",
-                        style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: GlobalColors.mainColor),
+                      backgroundColor: GlobalColors.mainColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            12), // Opcional, para bordes redondeados
+                      ),
+                    ),
+                    onPressed:
+                        _checkCurrentWiFi, // Ahora llama a _checkCurrentWiFi, que incluye el escaneo
+                    child: Text("Verificar conexión Wi-Fi",
+                        style: GoogleFonts.poppins(
+                            fontSize: 16, color: Colors.white)),
                   ),
                 ],
               ),
             )
-          : _wifiNetworks.isEmpty
-              ? Center(child: CircularProgressIndicator())
-              : ListView.builder(
-                  itemCount: _wifiNetworks.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title:
-                          Text(_wifiNetworks[index].ssid ?? "Red desconocida"),
-                      subtitle: Text(
-                          _wifiNetworks[index].bssid ?? "BSSID desconocido"),
-                      onTap: () {
-                        setState(() {
-                          _selectedSSID = _wifiNetworks[index].ssid;
-                        });
-                        _showPasswordDialog();
-                      },
-                    );
-                  },
-                ),
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  if (_isLoading)
+                    const CircularProgressIndicator()
+                  else
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: _wifiNetworks.length,
+                        itemBuilder: (context, index) {
+                          final wifiNetwork = _wifiNetworks[index];
+                          return ListTile(
+                            title: Text(wifiNetwork.ssid),
+                            onTap: () async {
+                              _selectedSSID = wifiNetwork.ssid;
+                              _showPasswordDialog();
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                ],
+              ),
+            ),
     );
   }
 
-  // Muestra un diálogo para introducir la contraseña del Wi-Fi
+  // Mostrar diálogo de contraseña
   void _showPasswordDialog() {
     showDialog(
       context: context,
@@ -286,23 +289,29 @@ Future<void> _checkCurrentWiFi() async {
               style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
           content: TextField(
             controller: _passwordController,
+            decoration: InputDecoration(hintText: "Contraseña de la red"),
             obscureText: true,
-            decoration: InputDecoration(labelText: "Contraseña"),
           ),
           actions: [
             TextButton(
               child: Text("Cancelar",
-                  style: GoogleFonts.poppins(color: GlobalColors.textColor)),
+                  style: GoogleFonts.poppins(
+                      color: GlobalColors.textColor,
+                      fontWeight: FontWeight.w500)),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context); // Solo cierra el diálogo
               },
             ),
             TextButton(
               child: Text("Conectar",
-                  style: GoogleFonts.poppins(color: GlobalColors.textColor)),
+                  style: GoogleFonts.poppins(
+                      color: GlobalColors.textColor,
+                      fontWeight: FontWeight.w500)),
               onPressed: () {
-                _connectToWiFi(_selectedSSID ?? "", _passwordController.text);
-                Navigator.pop(context);
+                if (_passwordController.text.isNotEmpty) {
+                  _connectToWiFi(_selectedSSID ?? '', _passwordController.text);
+                  Navigator.pop(context);
+                }
               },
             ),
           ],

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:poolclean/pages/inicio.dart';
 import 'package:poolclean/utils/global.colors.dart';
 
 class Splash extends StatelessWidget {
@@ -12,7 +11,7 @@ class Splash extends StatelessWidget {
   Widget build(BuildContext context) {
     Timer(const Duration(seconds: 5), () {
       if (Get.currentRoute == '/') {
-        Get.off(const InicioPage());
+        Get.offNamed('/inicio');
       }
     });
 

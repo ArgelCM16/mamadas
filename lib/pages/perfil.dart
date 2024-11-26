@@ -54,12 +54,8 @@ class _PerfilPageState extends State<PerfilPage> {
               Navigator.pushReplacementNamed(context, '/ajustespiscina');
             } else {
               // Si piscina_id tiene un valor, navegar a ConfigurarPiscinaPage
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => IConfiguracionPiscina(),
-                ),
-              );
+              Navigator.pushReplacementNamed(context, '/editarpiscina');
+
             }
           } else {
             Navigator.pushReplacementNamed(context, '/editarpiscina');

@@ -54,9 +54,9 @@ class CrearCuentaPage extends StatelessWidget {
                         'Bienvenido, regístrate aquí',
                         style: GoogleFonts.poppins(
                           textStyle: TextStyle(
-                            color: Colors.grey[700],
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
+                            color: Colors.grey[800],
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
@@ -237,7 +237,8 @@ class _ButtonGlobalCuenta extends StatelessWidget {
         'password': contraController.text,
       };
 
-      const String url = 'https://poolcleanapi-production.up.railway.app/api/crearCuenta';
+      const String url =
+          'https://poolcleanapi-production.up.railway.app/api/crearCuenta';
 
       try {
         final response = await http.post(

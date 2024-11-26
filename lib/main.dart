@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// ignore: depend_on_referenced_packages
 import 'package:get/get.dart';
 import 'package:poolclean/pages/ajustes_iniciales.dart';
 import 'package:poolclean/pages/connection.wife.dart';
 import 'package:poolclean/pages/detalles_piscina.dart';
 import 'package:poolclean/pages/inicio.dart';
 import 'package:poolclean/utils/provider.dart';
-import 'package:provider/provider.dart'; // Importar Provider
+import 'package:provider/provider.dart'; 
 import 'package:poolclean/pages/configuracion.wife.dart';
 import 'package:poolclean/pages/login.dart';
 import 'package:poolclean/pages/splash.dart';
-import 'package:poolclean/pages/home.dart';
 import 'package:poolclean/widgets/menu.navegacion.dart';
 
 void main() {

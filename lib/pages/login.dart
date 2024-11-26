@@ -9,15 +9,23 @@ import 'package:poolclean/widgets/menu.navegacion.dart';
 import 'package:poolclean/widgets/text.form.global.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  // Cambié a StatefulWidget
   LoginPage({super.key});
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController correoController = TextEditingController();
   final TextEditingController contraController = TextEditingController();
+  bool _isPasswordVisible =
+      false; // Estado para manejar la visibilidad de la contraseña
 
   Future<void> _login(BuildContext context) async {
-    const String apiUrl = "https://poolcleanapi-production.up.railway.app/api/login";
+    const String apiUrl =
+        "https://poolcleanapi-production.up.railway.app/api/login";
 
-    // Verificar si los campos están vacíos
     if (correoController.text.isEmpty || contraController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor, completa todos los campos')),
@@ -26,8 +34,7 @@ class LoginPage extends StatelessWidget {
     }
 
     try {
-      // Realizar la solicitud HTTP POST
-      final response = await http.post( 
+      final response = await http.post(
         Uri.parse(apiUrl),
         headers: {"Content-Type": "application/json"},
         body: json.encode({
@@ -38,8 +45,6 @@ class LoginPage extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print('Respuesta del servidor: $data');
-
         if (data['token'] != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('auth_token', data['token']);
@@ -48,10 +53,7 @@ class LoginPage extends StatelessWidget {
           await prefs.setString('user_lastname', data['user']['Apellidos']);
           await prefs.setString('user_email', data['user']['Correo']);
 
-          // ScaffoldMessenger.of(context).showSnackBar(
-          await checkAndSaveUserIp(context, data['token'], data['user']['Id']);
-          //   SnackBar(content: Text("Inicio de sesión exitoso")),
-          // );
+          // Navega a la siguiente pantalla
           Navigator.pushReplacementNamed(context, '/conectarwife');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -59,47 +61,22 @@ class LoginPage extends StatelessWidget {
                 content: Text(data['message'] ?? "Credenciales incorrectas")),
           );
         }
+      } else if (response.statusCode == 404) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Usuario o contraseña incorrectos.")),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error en el servidor. Intenta más tarde")),
+          const SnackBar(
+              content: Text("Error del servidor. Intenta más tarde.")),
         );
       }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error de conexión. Revisa tu red")),
+        SnackBar(content: Text("Error de conexión: $error")),
       );
     }
   }
-
-  Future<void> checkAndSaveUserIp(BuildContext context, String token, int userId) async {
-  try {
-    // URL de la API con el ID de usuario
-    final url = 'https://poolcleanapi-production.up.railway.app/api/verUsuarioIp/$userId';
-    
-    // Realizar solicitud GET con el token en los encabezados
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-
-    if (response.statusCode == 200) {
-      // Parsear la respuesta JSON
-      final data = json.decode(response.body);
-
-      if (data['usuario_ip'] != null) {
-        // Guardar la IP en SharedPreferences
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('Poolcleanip', data['usuario_ip']);
-      } else {
-        print('No se encontró una dirección IP para este usuario.');
-      }
-    } else {
-      print('Error al obtener los datos del usuario: ${response.statusCode}');
-    }
-  } catch (e) {
-    print('Error durante la solicitud: $e');
-  }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +115,7 @@ class LoginPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 90),
+                            const SizedBox(height: 90),
                             Container(
                               alignment: Alignment.center,
                               child: Text(
@@ -151,7 +128,7 @@ class LoginPage extends StatelessWidget {
                                 )),
                               ),
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Center(
                               child: Text(
                                 'Inicia sesión con tu cuenta',
@@ -163,21 +140,29 @@ class LoginPage extends StatelessWidget {
                                 )),
                               ),
                             ),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
                             TextGeneralForm(
                               controller: correoController,
                               text: 'Correo',
                               obscure: false,
                               textInputType: TextInputType.emailAddress,
                             ),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
+                            // Uso de TextGeneralForm para la contraseña con visibilidad
                             TextGeneralForm(
                               controller: contraController,
                               text: 'Contraseña',
-                              obscure: true,
+                              obscure: !_isPasswordVisible,
                               textInputType: TextInputType.text,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor ingresa tu contraseña';
+                                }
+                                return null;
+                              },
                             ),
-                            SizedBox(height: 15),
+
+                            const SizedBox(height: 15),
                             InkWell(
                               onTap: () => _login(context),
                               child: Container(
@@ -198,9 +183,8 @@ class LoginPage extends StatelessWidget {
                                 child: Text(
                                   'Iniciar Sesión',
                                   style: GoogleFonts.poppins(
-                                      textStyle: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600)),
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ),
                             ),
