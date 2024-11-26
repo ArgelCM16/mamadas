@@ -49,10 +49,9 @@ class LoginPage extends StatelessWidget {
           await prefs.setString('user_email', data['user']['Correo']);
 
           // ScaffoldMessenger.of(context).showSnackBar(
-          await checkAndSaveUserIp(context, data['token'], data['user']['Id']);
           //   SnackBar(content: Text("Inicio de sesión exitoso")),
           // );
-          Navigator.pushReplacementNamed(context, '/conectarwife');
+           Navigator.pushReplacementNamed(context, '/conectarwife');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

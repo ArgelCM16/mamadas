@@ -58,21 +58,24 @@ Future<void> _checkInitialScreen() async {
 
     // Si la respuesta es exitosa y existe una IP, la guardamos en el cache
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      final String? usuarioIp = data['usuario_ip'];
+  final Map<String, dynamic> data = jsonDecode(response.body);
+  String? usuarioIp = data['usuario_ip'];
 
-      if (usuarioIp != null) {
-        // Si existe la IP del usuario, la guardamos en el cache
-        await prefs.setString('Poolcleanip', usuarioIp);
-        poolCleanIp = usuarioIp; // Asigna la IP para usarla más tarde
+  if (usuarioIp != null) {
+    // Elimina las comillas adicionales si están presentes
+    usuarioIp = usuarioIp.replaceAll('"', '');
 
-        // Luego navega a HomePage
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      }
-    } else {
+    // Guarda la IP en el cache
+    await prefs.setString('Poolcleanip', usuarioIp);
+    poolCleanIp = usuarioIp; // Asigna la IP para usarla más tarde
+
+    // Luego navega a HomePage
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
+    );
+  }
+} else {
       // Si la consulta falla, puedes manejar el error como prefieras
       print('Error al obtener la IP del usuario desde la API');
     }
