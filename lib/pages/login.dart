@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
           await prefs.setString('user_email', data['user']['Correo']);
 
           // Navega a la siguiente pantalla
-          Navigator.pushReplacementNamed(context, '/conectarwife');
+          Navigator.pushReplacementNamed(context, '/home');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

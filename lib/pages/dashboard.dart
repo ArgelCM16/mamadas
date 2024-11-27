@@ -18,133 +18,132 @@ class DashboardPage extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Estadísticas mensuales pH',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    color: GlobalColors.textColor,
-                  ),
-                ),
-                Text(
-                  'Porcentaje mensual sobre el pH generado por tu piscina',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.grey[700],
-                  ),
-                  textAlign: TextAlign.start,
-                ),
+                // Text(
+                //   'Estadísticas mensuales pH',
+                //   style: GoogleFonts.poppins(
+                //     fontSize: 20,
+                //     fontWeight: FontWeight.w500,
+                //     color: GlobalColors.textColor,
+                //   ),
+                // ),
+                // Text(
+                //   'Porcentaje mensual sobre el pH generado por tu piscina',
+                //   style: GoogleFonts.poppins(
+                //     fontSize: 14,
+                //     fontWeight: FontWeight.w300,
+                //     color: Colors.grey[700],
+                //   ),
+                //   textAlign: TextAlign.start,
+                // ),
               ],
             ),
-            const SizedBox(height: 20),
-            SizedBox(
-              height: 300,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: BarChart(
-                  BarChartData(
-                    alignment: BarChartAlignment.spaceAround,
-                    maxY: 1,
-                    barTouchData: BarTouchData(enabled: true),
-                    titlesData: FlTitlesData(
-                      topTitles: AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      rightTitles: AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 42,
-                          getTitlesWidget: (double xValue, TitleMeta meta) {
-                            final style = TextStyle(
-                              color: Colors.pink,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10,
-                            );
-                            String text;
-                            switch (xValue.toInt()) {
-                              case 0:
-                                text = 'Ene';
-                                break;
-                              case 1:
-                                text = 'Feb';
-                                break;
-                              case 2:
-                                text = 'Mar';
-                                break;
-                              case 3:
-                                text = 'Abr';
-                                break;
-                              case 4:
-                                text = 'May';
-                                break;
-                              case 5:
-                                text = 'Jun';
-                                break;
-                              case 6:
-                                text = 'Jul';
-                                break;
-                              case 7:
-                                text = 'Aug';
-                                break;
-                              case 8:
-                                text = 'Sep';
-                                break;
-                              case 9:
-                                text = 'Oct';
-                                break;
-                              case 10:
-                                text = 'Nov';
-                                break;
-                              case 11:
-                                text = 'Dec';
-                                break;
-                              default:
-                                text = '';
-                            }
-                            return SideTitleWidget(
-                              axisSide: meta.axisSide,
-                              child: Text(text, style: style),
-                            );
-                          },
-                        ),
-                      ),
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 32,
-                          interval: 0.25,
-                          getTitlesWidget: (double value, TitleMeta meta) {
-                            final percentage = (value * 100).toInt();
-                            return Text(
-                              '$percentage%',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    borderData: FlBorderData(show: false),
-                    barGroups: _createBarGroups(),
-                  ),
-                ),
-              ),
-            ),
-            Text(
-              'Acidic (0.0 - 0.4), Neutral (0.4 - 0.6), Alkaline (0.6 - 1.0)',
-              style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.grey[800]),
-            ),
-            const SizedBox(height: 30),
+            // const SizedBox(height: 20),
+            // SizedBox(
+            //   height: 300,
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(10.0),
+            //     child: BarChart(
+            //       BarChartData(
+            //         alignment: BarChartAlignment.spaceAround,
+            //         maxY: 1,
+            //         barTouchData: BarTouchData(enabled: true),
+            //         titlesData: FlTitlesData(
+            //           topTitles: AxisTitles(
+            //             sideTitles: SideTitles(showTitles: false),
+            //           ),
+            //           rightTitles: AxisTitles(
+            //             sideTitles: SideTitles(showTitles: false),
+            //           ),
+            //           bottomTitles: AxisTitles(
+            //             sideTitles: SideTitles(
+            //               showTitles: true,
+            //               reservedSize: 42,
+            //               getTitlesWidget: (double xValue, TitleMeta meta) {
+            //                 final style = TextStyle(
+            //                   color: Colors.pink,
+            //                   fontWeight: FontWeight.bold,
+            //                   fontSize: 10,
+            //                 );
+            //                 String text;
+            //                 switch (xValue.toInt()) {
+            //                   case 0:
+            //                     text = 'Ene';
+            //                     break;
+            //                   case 1:
+            //                     text = 'Feb';
+            //                     break;
+            //                   case 2:
+            //                     text = 'Mar';
+            //                     break;
+            //                   case 3:
+            //                     text = 'Abr';
+            //                     break;
+            //                   case 4:
+            //                     text = 'May';
+            //                     break;
+            //                   case 5:
+            //                     text = 'Jun';
+            //                     break;
+            //                   case 6:
+            //                     text = 'Jul';
+            //                     break;
+            //                   case 7:
+            //                     text = 'Aug';
+            //                     break;
+            //                   case 8:
+            //                     text = 'Sep';
+            //                     break;
+            //                   case 9:
+            //                     text = 'Oct';
+            //                     break;
+            //                   case 10:
+            //                     text = 'Nov';
+            //                     break;
+            //                   case 11:
+            //                     text = 'Dec';
+            //                     break;
+            //                   default:
+            //                     text = '';
+            //                 }
+            //                 return SideTitleWidget(
+            //                   axisSide: meta.axisSide,
+            //                   child: Text(text, style: style),
+            //                 );
+            //               },
+            //             ),
+            //           ),
+            //           leftTitles: AxisTitles(
+            //             sideTitles: SideTitles(
+            //               showTitles: true,
+            //               reservedSize: 32,
+            //               interval: 0.25,
+            //               getTitlesWidget: (double value, TitleMeta meta) {
+            //                 final percentage = (value * 100).toInt();
+            //                 return Text(
+            //                   '$percentage%',
+            //                   style: const TextStyle(
+            //                     color: Colors.black,
+            //                     fontWeight: FontWeight.bold,
+            //                     fontSize: 12,
+            //                   ),
+            //                 );
+            //               },
+            //             ),
+            //           ),
+            //         ),
+            //         borderData: FlBorderData(show: false),
+            //         barGroups: _createBarGroups(),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // Text(
+            //   'Acidic (0.0 - 0.4), Neutral (0.4 - 0.6), Alkaline (0.6 - 1.0)',
+            //   style: GoogleFonts.poppins(
+            //       fontSize: 12,
+            //       fontWeight: FontWeight.w400,
+            //       color: Colors.grey[800]),
+            // ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -178,7 +177,9 @@ class DashboardPage extends StatelessWidget {
               temperatura: 15.5,
               humedad: 80.0,
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
           ]),
         ),
       ),

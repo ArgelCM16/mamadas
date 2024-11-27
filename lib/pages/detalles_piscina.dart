@@ -167,7 +167,7 @@ class _IConfiguracionPiscinaState extends State<IConfiguracionPiscina> {
             backgroundColor: GlobalColors.mainColor,
           ),
         );
-        Navigator.pop(context); // Volver atrás después de eliminar
+        Navigator.pushReplacementNamed(context, '/ajustespiscina');
       } else {
         throw Exception('Error al eliminar: ${response.body}');
       }
