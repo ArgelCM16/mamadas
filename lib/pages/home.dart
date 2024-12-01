@@ -1,16 +1,94 @@
 // ignore_for_file: depend_on_referenced_packages
 
+import 'dart:convert';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:poolclean/utils/global.colors.dart';
 import 'package:http/http.dart' as http;
+import 'package:poolclean/widgets/identificadorp_h.dart';
 import 'package:poolclean/widgets/ph_card_widget.dart';
 import 'package:poolclean/widgets/temperature_card_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomePageContent extends StatelessWidget {
-  const HomePageContent({super.key});
+class HomePageContent extends StatefulWidget {
+  const HomePageContent({Key? key}) : super(key: key);
+
+  @override
+  _HomePageContentState createState() => _HomePageContentState();
+}
+
+class _HomePageContentState extends State<HomePageContent> {
+  final _litrajeController = TextEditingController();
+
+  String piscinaId = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarDatosPiscina();
+  }
+
+  Future<void> _cargarDatosPiscina() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String id_ = (prefs.getInt('user_id') ?? 0).toString();
+      String token_ = prefs.getString('auth_token') ?? '';
+
+      if (id_.isNotEmpty && token_.isNotEmpty) {
+        final url = Uri.parse(
+            'https://poolcleanapi-production.up.railway.app/api/obtenerPiscinas/$id_');
+        final response = await http.get(
+          url,
+          headers: {'Authorization': 'Bearer $token_'},
+        );
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+
+          if (data['piscinas'] != null && data['piscinas'].isNotEmpty) {
+            final piscina = data['piscinas'][0];
+
+            setState(() {
+              _litrajeController.text = piscina['litraje'] ?? '';
+
+              piscinaId = piscina['piscina_id']; // Guardar piscina_id
+            });
+          }
+        }
+      }
+    } catch (e) {
+      print('Error al cargar datos: $e');
+    }
+  }
+
+  Future<Map<String, double>> _calcularCloroNecesario() async {
+    try {
+      if (_litrajeController.text.isNotEmpty) {
+        double litraje = double.parse(_litrajeController.text);
+        double volumen = litraje / 1000; // Convertir litros a m³
+
+        // Cálculo de cloro
+        double cloroLiquido = volumen * 0.1;
+        double cloroGranulado = volumen * 10;
+        double pastilla200 = volumen / 20;
+        double pastilla250 = volumen / 20;
+
+        return {
+          "cloroLiquido": cloroLiquido,
+          "cloroGranulado": cloroGranulado,
+          "pastilla200": pastilla200,
+          "pastilla250": pastilla250,
+        };
+      } else {
+        throw Exception("Introduce el litraje de la piscina.");
+      }
+    } catch (e) {
+      throw Exception("Error al calcular cloro: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,121 +160,7 @@ class HomePageContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                            height: 15,
-                            width: 15,
-                            color: const Color(0xffFF0159)),
-                        Container(
-                            height: 15,
-                            width: 15,
-                            color: const Color(0xffFD5C01)),
-                        Container(
-                            height: 15,
-                            width: 15,
-                            color: const Color(0xffFCC403)),
-                        Container(
-                            height: 15,
-                            width: 15,
-                            color: const Color(0xffF8EE00)),
-                        Container(
-                            height: 15,
-                            width: 15,
-                            color: const Color(0xffADD302)),
-                        Container(
-                            height: 15,
-                            width: 15,
-                            color: const Color(0xff6CC718)),
-                        Container(
-                            height: 15,
-                            width: 15,
-                            color: const Color(0xff0EC140)),
-                      ],
-                    ),
-                    Text(
-                      'ACIDIC',
-                      style: GoogleFonts.poppins(
-                          color: Colors.grey[700],
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 20),
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                            height: 15,
-                            width: 70,
-                            color: const Color(0xff009E2D)),
-                      ],
-                    ),
-                    Text(
-                      'NEUTRAL',
-                      style: GoogleFonts.poppins(
-                          color: Colors.grey[700],
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 20),
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                            height: 15,
-                            width: 15,
-                            color: const Color(0xff04B666)),
-                        Container(
-                            height: 15,
-                            width: 15,
-                            color: const Color(0xff00C0B8)),
-                        Container(
-                            height: 15,
-                            width: 15,
-                            color: const Color(0xff1D92D5)),
-                        Container(
-                            height: 15,
-                            width: 15,
-                            color: const Color(0xff2D56AD)),
-                        Container(
-                            height: 15,
-                            width: 15,
-                            color: const Color(0xff5E52A8)),
-                        Container(
-                            height: 15,
-                            width: 15,
-                            color: const Color(0xff6744A2)),
-                        Container(
-                            height: 15,
-                            width: 15,
-                            color: const Color(0xff4A2D7F)),
-                      ],
-                    ),
-                    Text(
-                      'ALKALINE',
-                      style: GoogleFonts.poppins(
-                          color: Colors.grey[700],
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            const identificadorpH(),
             const SizedBox(height: 20),
             Container(
               alignment: Alignment.topLeft,
@@ -210,42 +174,198 @@ class HomePageContent extends StatelessWidget {
                 textAlign: TextAlign.start,
               ),
             ),
-            const SizedBox(height: 10),
             const Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          TemperatureCard(),
-                          SizedBox(height: 10),
-                          PhCard(),
-                        ],
+                padding: EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: TemperatureCard(),
                       ),
                     ),
-                  ),
-                  // Expanded(
-                  //   child: Padding(
-                  //     padding: EdgeInsets.all(5.0),
-                  //     child: Column(
-                  //       children: [
-                  //         PhCard(),
-                  //         SizedBox(height: 10),
-                  //         PhCard(),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                ],
-              ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: PhCard(),
+                      ),
+                    ),
+                  ],
+                )),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              child: cardCloro(context),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20)
           ],
+        ),
+      ),
+    );
+  }
+
+  Card cardCloro(BuildContext context) {
+    return Card(
+      color: Colors.white,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      margin: const EdgeInsets.all(10),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              offset: Offset(4, 4),
+              blurRadius: 8,
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Column(
+            children: [
+              Text('Saber la cantidad de cloro para la limpieza de mi piscina',
+                  style: GoogleFonts.poppins(
+                      fontSize: 16, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 10),
+              const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [],
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    final cloro = await _calcularCloroNecesario();
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(
+                            'Calculo de cloro',
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20,
+                              color: GlobalColors.mainColor,
+                            ),
+                          ),
+                          content: RichText(
+                            text: TextSpan(
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16, color: Colors.black),
+                              children: [
+                                TextSpan(
+                                  text: 'Para la limpieza de tu piscina:\n\n',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey[700]),
+                                ),
+                                TextSpan(
+                                  text: '• Cloro líquido: ',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[800]),
+                                ),
+                                TextSpan(
+                                  text:
+                                      '${cloro["cloroLiquido"]!.toStringAsFixed(2)} litros\n',
+                                  style:
+                                      GoogleFonts.poppins(color: Colors.black),
+                                ),
+                                TextSpan(
+                                  text: '• Cloro granulado: ',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[800]),
+                                ),
+                                TextSpan(
+                                  text:
+                                      '${cloro["cloroGranulado"]!.toStringAsFixed(2)} gramos\n',
+                                  style:
+                                      GoogleFonts.poppins(color: Colors.black),
+                                ),
+                                TextSpan(
+                                  text: '• Pastillas (200g): ',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[800]),
+                                ),
+                                TextSpan(
+                                  text:
+                                      '${cloro["pastilla200"]!.toStringAsFixed(2)} pastillas\n',
+                                  style:
+                                      GoogleFonts.poppins(color: Colors.black),
+                                ),
+                                TextSpan(
+                                  text: '• Pastillas (250g): ',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[800]),
+                                ),
+                                TextSpan(
+                                  text:
+                                      '${cloro["pastilla250"]!.toStringAsFixed(2)} pastillas\n',
+                                  style:
+                                      GoogleFonts.poppins(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: GlobalColors.mainColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'Cerrar',
+                                  style:
+                                      GoogleFonts.poppins(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(e.toString()),
+                      ),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: GlobalColors.mainColor,
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 15.0, horizontal: 100.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+                child: Text(
+                  'Calcular Cloro',
+                  style: GoogleFonts.poppins(
+                      color: Colors.white, fontWeight: FontWeight.w500),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -287,67 +407,5 @@ class HomePageContent extends StatelessWidget {
         ),
       );
     });
-  }
-}
-
-class BatteryCard extends StatelessWidget {
-  const BatteryCard({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      elevation: 8.0,
-      shadowColor: Colors.grey.withOpacity(0.5),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          children: [
-            Text(
-              'Batería',
-              style: GoogleFonts.poppins(
-                  fontSize: 16, fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 20), // Ajusta el padding
-              child: CircularPercentIndicator(
-                radius: 40,
-                lineWidth: 5,
-                percent: 0.7,
-                progressColor: Colors.green,
-                backgroundColor: Colors.grey.shade100,
-                circularStrokeCap: CircularStrokeCap.round,
-                center: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.battery_5_bar,
-                      weight: 5,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(width: 5),
-                    Expanded(
-                      child: Text(
-                        '70%',
-                        style: GoogleFonts.poppins(fontSize: 16),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

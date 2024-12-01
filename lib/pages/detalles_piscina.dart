@@ -39,7 +39,8 @@ class _IConfiguracionPiscinaState extends State<IConfiguracionPiscina> {
       String token_ = prefs.getString('auth_token') ?? '';
 
       if (id_.isNotEmpty && token_.isNotEmpty) {
-        final url = Uri.parse('https://poolcleanapi-production.up.railway.app/api/obtenerPiscinas/$id_');
+        final url = Uri.parse(
+            'https://poolcleanapi-production.up.railway.app/api/obtenerPiscinas/$id_');
         final response = await http.get(
           url,
           headers: {'Authorization': 'Bearer $token_'},
@@ -98,8 +99,8 @@ class _IConfiguracionPiscinaState extends State<IConfiguracionPiscina> {
         throw Exception("No se ha cargado el ID de la piscina.");
       }
 
-      final url =
-          Uri.parse('https://poolcleanapi-production.up.railway.app/api/actualizarPiscina/$piscinaId');
+      final url = Uri.parse(
+          'https://poolcleanapi-production.up.railway.app/api/actualizarPiscina/$piscinaId');
       final response = await http.put(
         url,
         headers: {
@@ -133,9 +134,9 @@ class _IConfiguracionPiscinaState extends State<IConfiguracionPiscina> {
       print('Error al actualizar piscina: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error al actualizar: $e',style:const  TextStyle(color: Colors.black)),
-          backgroundColor: Colors.grey
-        ),
+            content: Text('Error al actualizar: $e',
+                style: const TextStyle(color: Colors.black)),
+            backgroundColor: Colors.grey),
       );
     }
   }
@@ -148,8 +149,8 @@ class _IConfiguracionPiscinaState extends State<IConfiguracionPiscina> {
         throw Exception("No se ha cargado el ID de la piscina.");
       }
 
-      final url =
-          Uri.parse('https://poolcleanapi-production.up.railway.app/api/borrarPiscina/$piscinaId');
+      final url = Uri.parse(
+          'https://poolcleanapi-production.up.railway.app/api/borrarPiscina/$piscinaId');
       final response = await http.delete(
         url,
         headers: {
@@ -175,7 +176,10 @@ class _IConfiguracionPiscinaState extends State<IConfiguracionPiscina> {
       print('Error al eliminar piscina: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error al eliminar piscina: $e', style:const  TextStyle(color: Colors.black),),
+          content: Text(
+            'Error al eliminar piscina: $e',
+            style: const TextStyle(color: Colors.black),
+          ),
           backgroundColor: Colors.grey,
         ),
       );
@@ -211,7 +215,7 @@ class _IConfiguracionPiscinaState extends State<IConfiguracionPiscina> {
                 setState(() {
                   _isEditing = false;
                 });
-                _actualizarPiscina(); 
+                _actualizarPiscina();
               } else if (!_isEditing) {
                 setState(() {
                   _isEditing = true;
@@ -220,6 +224,15 @@ class _IConfiguracionPiscinaState extends State<IConfiguracionPiscina> {
             },
           ),
         ],
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/home');
+          },
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),

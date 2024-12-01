@@ -54,14 +54,6 @@ class ListaHistorial extends StatelessWidget {
                 color: Colors.grey[900],
               ),
             ),
-            Text(
-              'Humedad: $humedad%',
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[900],
-              ),
-            ),
           ],
         ),
       ),

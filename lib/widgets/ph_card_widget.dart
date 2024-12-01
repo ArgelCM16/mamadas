@@ -17,8 +17,8 @@ class _PhCardState extends State<PhCard> {
   bool isConnected = true;
   Timer? connectionTimer;
   String? poolCleanIp; // Variable para almacenar la IP
-  String? authToken;  // Token de autenticación
-  int? userId;        // ID de usuario
+  String? authToken; // Token de autenticación
+  int? userId; // ID de usuario
 
   @override
   void initState() {
@@ -57,7 +57,8 @@ class _PhCardState extends State<PhCard> {
 
     try {
       final response = await http.put(
-        Uri.parse('https://poolcleanapi-production.up.railway.app/api/asignarIp/$userId'),
+        Uri.parse(
+            'https://poolcleanapi-production.up.railway.app/api/asignarIp/$userId'),
         headers: {
           'Authorization': 'Bearer $authToken',
         },
@@ -80,7 +81,8 @@ class _PhCardState extends State<PhCard> {
     if (poolCleanIp == null) return; // Si no hay IP, no hace la solicitud
 
     try {
-      final response = await http.get(Uri.parse('http://$poolCleanIp/ph')); // Usa la IP obtenida
+      final response = await http
+          .get(Uri.parse('http://$poolCleanIp/ph')); // Usa la IP obtenida
       if (response.statusCode == 200 && mounted) {
         setState(() {
           ph = double.parse(response.body);
@@ -117,53 +119,64 @@ class _PhCardState extends State<PhCard> {
   @override
   Widget build(BuildContext context) {
     // Aquí, cada vez que se reconstruya el widget, se actualizará la IP en la API
-              _updateIpInApi();
-
+    _updateIpInApi();
 
     return Card(
-      color: Colors.white,
-      elevation: 8.0,
-      shadowColor: Colors.grey.withOpacity(0.5),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          children: [
-            Text('pH',
-                style: GoogleFonts.poppins(
-                    fontSize: 16, fontWeight: FontWeight.w700)),
-            const SizedBox(height: 10),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        color: Colors.white,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        margin: const EdgeInsets.all(10),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                offset: Offset(4, 4),
+                blurRadius: 8,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
               children: [
-                const Icon(
-                  Icons.water_drop_rounded,
-                  color: Colors.blue,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    isConnected
-                        ? (ph != null
-                            ? ph!.toStringAsFixed(1)
-                            : 'Cargando...')
-                        : 'No conectado',
+                Text('pH',
                     style: GoogleFonts.poppins(
-                        color: Colors.grey[700],
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
+                        fontSize: 16, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Icons.water_drop_rounded,
+                      color: Colors.blue,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        isConnected
+                            ? (ph != null
+                                ? ph!.toStringAsFixed(1)
+                                : 'Cargando...')
+                            : 'No conectado',
+                        style: GoogleFonts.poppins(
+                            color: Colors.grey[700],
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-
-    );
+          ),
+        ));
   }
 }

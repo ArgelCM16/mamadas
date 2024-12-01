@@ -1,22 +1,15 @@
 import 'dart:convert';
-
+// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+// ignore: depend_on_referenced_packages
 import 'package:google_fonts/google_fonts.dart';
-import 'package:poolclean/pages/ajustes_iniciales.dart';
-import 'package:poolclean/pages/configurar_piscinas_page.dart';
-import 'package:poolclean/pages/detalles_piscina.dart';
 import 'package:poolclean/pages/informacion_personal.dart';
-import 'package:poolclean/pages/login.dart';
 import 'package:poolclean/pages/preguntas_frecuentes.dart';
+import 'package:poolclean/pages/subscripciones.dart';
 import 'package:poolclean/pages/terminos_condiciones.dart';
-import 'package:poolclean/utils/get.clima.dart';
 import 'package:poolclean/utils/global.colors.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:poolclean/utils/provider.dart';
-import 'package:poolclean/widgets/informacion_personal_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,7 +30,8 @@ class _PerfilPageState extends State<PerfilPage> {
       String token_ = prefs.getString('auth_token') ?? '';
 
       if (id_.isNotEmpty && token_.isNotEmpty) {
-        final url = Uri.parse('https://poolcleanapi-production.up.railway.app/api/obtenerPiscinas/$id_');
+        final url = Uri.parse(
+            'https://poolcleanapi-production.up.railway.app/api/obtenerPiscinas/$id_');
         final response = await http.get(
           url,
           headers: {'Authorization': 'Bearer $token_'},
@@ -55,7 +49,6 @@ class _PerfilPageState extends State<PerfilPage> {
             } else {
               // Si piscina_id tiene un valor, navegar a ConfigurarPiscinaPage
               Navigator.pushReplacementNamed(context, '/editarpiscina');
-
             }
           } else {
             Navigator.pushReplacementNamed(context, '/editarpiscina');
@@ -142,6 +135,31 @@ class _PerfilPageState extends State<PerfilPage> {
               trailing: const Icon(Icons.arrow_forward_ios_rounded),
               onTap: () async {
                 await _verificarDatosPiscina(context);
+              },
+            ),
+            ListTile(
+              shape: const Border(
+                bottom: BorderSide(color: Colors.grey, width: 0.2),
+              ),
+              leading: Icon(
+                Icons.subscriptions_outlined,
+                color: GlobalColors.mainColor,
+              ),
+              title: Text(
+                'Suscripciones',
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios_rounded),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SubscripcionesPage(),
+                  ),
+                );
               },
             ),
             ListTile(

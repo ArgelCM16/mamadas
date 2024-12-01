@@ -82,50 +82,63 @@ class _TemperatureCardState extends State<TemperatureCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white,
-      elevation: 8.0,
-      shadowColor: Colors.grey.withOpacity(0.5),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          children: [
-            Text('Temperatura',
-                style: GoogleFonts.poppins(
-                    fontSize: 16, fontWeight: FontWeight.w700)),
-            const SizedBox(height: 10),
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.thermostat_rounded,
-                    color: Colors.blue,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      isConnected
-                          ? (temperature != null
-                              ? '${temperature!.toStringAsFixed(1)} °C'
-                              : 'Cargando...')
-                          : 'No conectado',
-                      style: GoogleFonts.poppins(
-                          color: Colors.grey[700],
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
+        color: Colors.white,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
-      ),
-    );
+        margin: const EdgeInsets.all(10),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                offset: Offset(4, 4),
+                blurRadius: 8,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+              children: [
+                Text('Temperatura',
+                    style: GoogleFonts.poppins(
+                        fontSize: 16, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 10),
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.thermostat_rounded,
+                        color: Colors.blue,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          isConnected
+                              ? (temperature != null
+                                  ? '${temperature!.toStringAsFixed(1)} °C'
+                                  : 'Cargando...')
+                              : 'No conectado',
+                          style: GoogleFonts.poppins(
+                              color: Colors.grey[700],
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }
