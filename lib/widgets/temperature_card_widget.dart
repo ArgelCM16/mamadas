@@ -15,9 +15,10 @@ class TemperatureCard extends StatefulWidget {
 }
 
 class _TemperatureCardState extends State<TemperatureCard> {
-  double defaultTemperature = 28.0; 
+  double defaultTemperature = 28.0;
   double? temperature;
   bool isConnected = true;
+  bool isLoading = true; // Estado para controlar la carga de la temperatura
   Timer? connectionTimer;
   String? poolCleanIp;
 
@@ -26,6 +27,18 @@ class _TemperatureCardState extends State<TemperatureCard> {
     super.initState();
     _getStoredIp();
     _checkConnectionTimeout();
+    _simulateLoading(); // Simula carga de 10 segundos
+  }
+
+  Future<void> _simulateLoading() async {
+    // Espera 10 segundos antes de cambiar a mostrar el valor real de la temperatura
+    await Future.delayed(const Duration(seconds: 10));
+    if (mounted) {
+      setState(() {
+        isLoading =
+            false; // Después de 10 segundos, deja de mostrar "Cargando..."
+      });
+    }
   }
 
   Future<void> _getStoredIp() async {
@@ -119,11 +132,13 @@ class _TemperatureCardState extends State<TemperatureCard> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        isConnected
-                            ? (temperature != null
-                                ? '${temperature!.toStringAsFixed(1)} °C'
-                                : '${defaultTemperature.toStringAsFixed(1)} °C (Cargando...)')
-                            : '${defaultTemperature.toStringAsFixed(1)} °C',
+                        isLoading
+                            ? 'Cargando...' // Mostrar "Cargando..." durante la espera
+                            : isConnected
+                                ? (temperature != null
+                                    ? '${temperature!.toStringAsFixed(1)} °C'
+                                    : '${defaultTemperature.toStringAsFixed(1)} °C')
+                                : '${defaultTemperature.toStringAsFixed(1)} °C',
                         style: GoogleFonts.poppins(
                             color: Colors.grey[700],
                             fontSize: 16,

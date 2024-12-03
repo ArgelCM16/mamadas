@@ -15,6 +15,7 @@ class _PhCardState extends State<PhCard> {
   final double defaultPh = 5.6; // Valor predeterminado para el pH
   double ph = 5.6; // Asignar valor predeterminado al iniciar
   bool isConnected = true;
+  bool isLoading = true; // Estado para controlar el texto de carga
   Timer? connectionTimer;
   String? poolCleanIp;
 
@@ -23,6 +24,17 @@ class _PhCardState extends State<PhCard> {
     super.initState();
     _getStoredIp();
     _checkConnectionTimeout();
+    _simulateLoading(); // Simular carga inicial
+  }
+
+  Future<void> _simulateLoading() async {
+    // Esperar 10 segundos antes de mostrar el valor real
+    await Future.delayed(const Duration(seconds: 10));
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> _getStoredIp() async {
@@ -121,7 +133,7 @@ class _PhCardState extends State<PhCard> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '5.6',
+                        isLoading ? 'Cargando...' : ph.toStringAsFixed(1), // Mostrar "Cargando..." o el valor de pH
                         style: GoogleFonts.poppins(
                           color: Colors.grey[700],
                           fontSize: 16,
