@@ -92,6 +92,7 @@ Future<void> _checkInitialScreen() async {
 Future<void> _checkCurrentWiFi() async {
   String currentSSID = await WiFiForIoTPlugin.getSSID() ?? "";
   setState(() {
+    // cambiar el nombre al poolclean
     _isConnectedToPoolclean = currentSSID == "Poolclean";
   });
 }
@@ -123,6 +124,8 @@ Future<void> _checkCurrentWiFi() async {
 
   // Conectar al Wi-Fi y enviar la petición al ESP32
   Future<void> _connectToWiFi(String ssid, String password) async {
+
+    // poner esto de nuevo
     final response = await http.post(
       Uri.parse(
           'http://192.168.4.1/connect'), // Asegúrate de que la IP sea correcta
@@ -144,6 +147,8 @@ Future<void> _checkCurrentWiFi() async {
     } else {
       _showConnectionErrorDialog();
     }
+
+
   }
 
   // Analiza el cuerpo de la respuesta para obtener la IP del Poolclean
