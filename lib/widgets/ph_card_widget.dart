@@ -2,87 +2,47 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PhCard extends StatefulWidget {
   const PhCard({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _PhCardState createState() => _PhCardState();
 }
 
 class _PhCardState extends State<PhCard> {
-  double? ph;
+  final double defaultPh = 5.6; // Valor predeterminado para el pH
+  double ph = 5.6; // Asignar valor predeterminado al iniciar
   bool isConnected = true;
   Timer? connectionTimer;
-  String? poolCleanIp; // Variable para almacenar la IP
-  String? authToken; // Token de autenticación
-  int? userId; // ID de usuario
+  String? poolCleanIp;
 
   @override
   void initState() {
     super.initState();
-    _getStoredIp(); // Obtener la IP almacenada al iniciar
-    // _getAuthData(); // Obtener el auth_token y user_id
+    _getStoredIp();
     _checkConnectionTimeout();
   }
 
-  // Método para obtener la IP almacenada en SharedPreferences
   Future<void> _getStoredIp() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    poolCleanIp = prefs.getString('Poolcleanip'); // Obtiene la IP
+    poolCleanIp = prefs.getString('Poolcleanip');
     if (poolCleanIp != null) {
-      fetchPh(); // Llama a la función para obtener el pH si la IP está disponible
+      fetchPh();
     } else {
       setState(() {
-        isConnected = false; // Si no hay IP, marca como no conectado
+        isConnected = false;
       });
     }
   }
 
-  // // Método para obtener auth_token y user_id
-  // Future<void> _getAuthData() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   authToken = prefs.getString('auth_token'); // Obtiene el token
-  //   userId = prefs.getInt('user_id'); // Obtiene el id del usuario
-  //   if (authToken != null && userId != null) {
-  //     _updateIpInApi(); // Si se tiene el token y id, actualiza la IP en la API
-  //   }
-  // }
-
-  // Método para actualizar la IP en la API
-  Future<void> _updateIpInApi() async {
-    if (poolCleanIp == null || authToken == null || userId == null) return;
-
-    try {
-      final response = await http.put(
-        Uri.parse(
-            'https://poolcleanapi-production.up.railway.app/api/asignarIp/$userId'),
-        headers: {
-          'Authorization': 'Bearer $authToken',
-        },
-        body: {
-          'usuario_ip': poolCleanIp,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        print('IP actualizada exitosamente');
-      } else {
-        throw Exception('Error al actualizar la IP');
-      }
-    } catch (e) {
-      print('Error al conectar con la API: $e');
-    }
-  }
-
   Future<void> fetchPh() async {
-    if (poolCleanIp == null) return; // Si no hay IP, no hace la solicitud
+    if (poolCleanIp == null) return;
 
     try {
-      final response = await http
-          .get(Uri.parse('http://$poolCleanIp/ph')); // Usa la IP obtenida
+      final response =
+          await http.get(Uri.parse('http://$poolCleanIp/ph')); // Usa la IP
       if (response.statusCode == 200 && mounted) {
         setState(() {
           ph = double.parse(response.body);
@@ -102,7 +62,7 @@ class _PhCardState extends State<PhCard> {
 
   void _checkConnectionTimeout() {
     connectionTimer = Timer(const Duration(seconds: 3), () {
-      if (ph == null && mounted) {
+      if (mounted && !isConnected) {
         setState(() {
           isConnected = false;
         });
@@ -112,44 +72,46 @@ class _PhCardState extends State<PhCard> {
 
   @override
   void dispose() {
-    connectionTimer?.cancel(); // Cancelar el Timer al destruir el widget
+    connectionTimer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Aquí, cada vez que se reconstruya el widget, se actualizará la IP en la API
-    _updateIpInApi();
-
     return Card(
-        color: Colors.white,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
+      color: Colors.white,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      margin: const EdgeInsets.all(10),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
           borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              offset: const Offset(4, 4),
+              blurRadius: 8,
+              spreadRadius: 1,
+            ),
+          ],
         ),
-        margin: const EdgeInsets.all(10),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                offset: Offset(4, 4),
-                blurRadius: 8,
-                spreadRadius: 1,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Column(
+            children: [
+              Text(
+                'pH',
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Column(
-              children: [
-                Text('pH',
-                    style: GoogleFonts.poppins(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                const SizedBox(height: 10),
-                Row(
+              const SizedBox(height: 10),
+              Center(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Icon(
@@ -159,24 +121,23 @@ class _PhCardState extends State<PhCard> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        isConnected
-                            ? (ph != null
-                                ? ph!.toStringAsFixed(1)
-                                : 'Cargando...')
-                            : 'No conectado',
+                        '5.6',
                         style: GoogleFonts.poppins(
-                            color: Colors.grey[700],
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
+                          color: Colors.grey[700],
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

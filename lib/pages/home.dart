@@ -86,7 +86,7 @@ class _HomePageContentState extends State<HomePageContent> {
         throw Exception("Introduce el litraje de la piscina.");
       }
     } catch (e) {
-      throw Exception("Error al calcular cloro: $e");
+      throw Exception("Introduce el litraje de la piscina.");
     }
   }
 
