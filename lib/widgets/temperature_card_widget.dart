@@ -15,7 +15,7 @@ class TemperatureCard extends StatefulWidget {
 }
 
 class _TemperatureCardState extends State<TemperatureCard> {
-  double defaultTemperature = 28.0;
+  double defaultTemperature = 27.0;
   double? temperature;
   bool isConnected = true;
   bool isLoading = true; // Estado para controlar la carga de la temperatura

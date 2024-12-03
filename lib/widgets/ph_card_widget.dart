@@ -12,8 +12,8 @@ class PhCard extends StatefulWidget {
 }
 
 class _PhCardState extends State<PhCard> {
-  final double defaultPh = 5.6; // Valor predeterminado para el pH
-  double ph = 5.6; // Asignar valor predeterminado al iniciar
+  final double defaultPh =7.6; // Valor predeterminado para el pH
+  double ph = 7.6; 
   bool isConnected = true;
   bool isLoading = true; // Estado para controlar el texto de carga
   Timer? connectionTimer;

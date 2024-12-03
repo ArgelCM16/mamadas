@@ -40,13 +40,13 @@ class _WiFiConnectionPageState extends State<WiFiConnectionPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     poolCleanIp = prefs.getString('Poolcleanip'); // Obtiene la IP
 
-    if (poolCleanIp != null) {
+
       // Si ya tiene un user_id guardado, ir directamente a HomePage
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
       );
-    }
+
   }
 
   Future<void> _checkCurrentWiFi() async {
